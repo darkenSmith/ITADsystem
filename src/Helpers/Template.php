@@ -20,12 +20,12 @@ class Template implements TemplateInterface
         if ($template) {
             extract($vars);
             require_once(
-            sprintf(
-                '%s%s.%s',
-                $this->templatePath,
-                $template,
-                self::FILE_EXTENSION
-            )
+                sprintf(
+                    '%s%s.%s',
+                    $this->templatePath,
+                    $template,
+                    self::FILE_EXTENSION
+                )
             );
         }
     }

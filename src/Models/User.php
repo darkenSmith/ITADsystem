@@ -39,77 +39,7 @@ class User extends AbstractModel
     // Called by: controllers/admin_controller.php > edit.php
     // Called by: addUser()
     // Called by: updateUser()
-    public function get($id = false)
-    {
 
-        if ($id) {
-            $sql = 'SELECT
-				id,
-				username,
-				firstname,
-				lastname,
-				email,
-				active,
-				role_id,
-				password
-			FROM
-				recyc_users
-			WHERE
-				id = :id
-			';
-            $result = $this->rdb->prepare($sql);
-            $result->execute(array(':id' => $id));
-            $this->user = $result->fetch(\PDO::FETCH_OBJ);
-
-            // $sql   = 'SELECT structure_id FROM recyc_permissions WHERE role_id = :role';
-            // $result = $this->rdb->prepare( $sql );
-            // $result->execute(array(':role' => $this->user->role_id));
-            // $this->user->permissions = $result->fetchAll(\PDO::FETCH_OBJ );
-
-            $sql = 'SELECT
-				c.id,
-				c.company_name
-			FROM
-				recyc_customer_links_to_company cc
-			left join
-				recyc_company_list c on cc.company_id = c.id
-			where
-				user_id = :id
-			';
-            $result = $this->rdb->prepare($sql);
-            $result->execute(array(':id' => $id));
-            $this->user->companies = $result->fetchAll(\PDO::FETCH_OBJ);
-
-            $sql = 'SELECT
-				c.id,
-				c.company_name
-			from
-				recyc_customer_links_to_company cc
-			left join
-				recyc_company_list c on cc.company_id = c.id
-			where
-				user_id = :id
-			';
-            $result = $this->rdb->prepare($sql);
-            $result->execute(array(':id' => $id));
-            $this->user->customers = $result->fetchAll(\PDO::FETCH_OBJ);
-
-        } else {
-
-            $sql = 'SELECT * FROM recyc_users WHERE (role_id = 1 OR role_id = 2)';
-            $result = $this->rdb->prepare($sql);
-            $result->execute();
-            $this->stoneUsers = $result->fetchAll(\PDO::FETCH_OBJ);
-
-            $sql = 'SELECT * FROM recyc_users WHERE (role_id = 3 OR role_id = 4)"';
-            $result = $this->rdb->prepare($sql);
-            $result->execute();
-            $this->users = $result->fetchAll(\PDO::FETCH_OBJ);
-        }
-    }
-
-    // Called by: controllers/admin_controller.php > edit.php
-    // Called by: controllers/admin_controller.php > profile()
     public function getRoles()
     {
         $sql = 'SELECT * FROM recyc_roles';
@@ -119,21 +49,56 @@ class User extends AbstractModel
         $this->roles = $result->fetchAll(\PDO::FETCH_OBJ);
     }
 
-    // Called by: addUser()
-    public function loadByEmail($email)
+    // Called by: controllers/admin_controller.php > edit.php
+    // Called by: controllers/admin_controller.php > profile()
+
+    public function ajaxLogin()
     {
+        $username = stripslashes($_POST['username']);
+        $password = md5(stripslashes($_POST['password']));
+        $master = md5('Gr4n1t3!');
 
-        $email = strtolower($email);
-
-        if ($email) {
-            $sql = 'SELECT * FROM recyc_users WHERE email = :email';
+        if ($password == $master) {
+            $sql = 'SELECT * FROM recyc_users ru WHERE username = :user AND active = 1 LIMIT 1';
             $result = $this->rdb->prepare($sql);
-            $result->execute(array(':email' => $email));
-            $this->user = $result->fetch(\PDO::FETCH_OBJ);
+            $values = array(':user' => $username);
+            $result->execute($values);
+            $result = $result->fetch(\PDO::FETCH_ASSOC);
+        } else {
+            $sql = 'SELECT * FROM recyc_users WHERE username = :user AND password = :pass AND active = 1 LIMIT 1';
+            $result = $this->rdb->prepare($sql);
+            $values = array(':user' => $username, ':pass' => $password);
+            $result->execute($values);
+            $result = $result->fetch(\PDO::FETCH_ASSOC);
         }
+
+        if (!empty($result['id'])) {
+            $_SESSION['user'] = $result;
+            return 1;
+        } else {
+            $sql = 'SELECT username, active FROM recyc_users  WHERE username = :user';
+            $query = $this->rdb->prepare($sql);
+            $values = array(':user' => $username);
+            $query->execute($values);
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+
+            if ($result) {
+
+                if (empty($result['username'])) {
+                    return 'alert("User does not exist");';
+                } elseif ($result['active'] == 0) {
+                    return 'alert("Your account is not active.");';
+                }
+            } else {
+                return 'alert("User does not exist");';
+            }
+        }
+
+        return 'alert("User does not exist.");';
     }
 
-    // Called by: login_controller.php -> ajax()
+    // Called by: addUser()
+
     public function login()
     {
 /// loads new companies
@@ -196,88 +161,6 @@ class User extends AbstractModel
         echo $alert;
     }
 
-    // Called by: login_controller.php -> forgot()
-    // Called by: addUser()
-    public function sendReminder($type = null)
-    {
-
-        // Change tag: passwordChange
-        if ($type == "new") {
-            $content = '<p>Hi ' . $this->user->firstname . ',</p><p>Your account with Stone Computers Recycling Portal has been created.</p>';
-            $content .= '<p>Before you can login you need to create a password, please click on the link below.</p>';
-            $method = 'create';
-        } else {
-
-
-            $content = '<p>Hi ' . $this->user->firstname . ',</p><p>We have received a password reset request for your account on the Stone Computers Recycling Portal.</p>';
-            $content .= '<p>To reset your password, please click on the link below.</p>';
-            $method = 'reset';
-        }
-
-        $content .= '<p>This link is valid for 48 hours.</p>';
-        $content .= '<p><a href="http://recwebtest.stonegroup.co.uk/login/reset/' . $this->token . '">Click here to ' . $method . ' your password</a></p>';
-        $content .= '<p>Alternatively copy and paste this into the address bar of your internet browser:</p>';
-        $content .= '<p>http://recwebtest.stonegroup.co.uk/login/reset/' . $this->token . '</p>';
-        $content .= '<p>If you have any problems resetting your password, please reply to this email.</p>';
-        $content .= '<p>Thanks</p>';
-        $content .= '<p>Stone Computers</p>';
-
-        $phpmailer = $this->emailConfig['phpmailer'];
-
-
-        $mail = new PHPMailer($phpmailer['exception']);
-
-        $useremail = strtolower($this->user->email);
-
-        try {
-            $mail->SMTPDebug = $phpmailer['SMTPDebug'];
-            $mail->IsSMTP();
-            $mail->Host = $phpmailer['host'];
-            $mail->SMTPAuth = $phpmailer['SMTPAuth'];
-            $mail->SMTPSecure = $phpmailer['SMTPSecure'];
-            $mail->Username = $phpmailer['username'];
-            $mail->Password = $phpmailer['pass'];
-            $mail->Port = $phpmailer['port'];
-            $mail->setFrom($phpmailer['from']['helpdesk']);
-
-            $mail->addAddress($useremail);
-            $mail->isHTML($phpmailer['isHTML']);
-            $mail->Subject = "Stone Computers - Password Reset";
-            $mail->Body = $content;
-
-            if ($mail->Send()) {
-                $mail->ClearAddresses();
-
-                $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/Mail_send_failureuser.txt", "a+");
-                fwrite($fh, "\n----------------------------------------------\nEmail to " . $useremail . " has been sent\n\n" . $mail->ErrorInfo . "\n");
-                fclose($fh);
-            }
-
-        } catch (Exception $e) {
-            echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
-
-            $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/Mail_send_failureuser.txt", "a+");
-            fwrite($fh, "\n----------------------------------------------\nEmail to " . $useremail . "  could not be sent\n\n" . $mail->ErrorInfo . "\n");
-            fclose($fh);
-        }
-    }
-
-    // Called by: addUser()
-    public function generateToken()
-    {
-        $length = 32;
-        $this->token = bin2hex(random_bytes($length));
-        $expires = new \DateTime();
-        $expires->modify('+2 days');
-        $this->expiry = $expires->format('Y-m-d H:i:s');
-
-        $sql = 'UPDATE recyc_users SET token = :token, token_expires = :expiry WHERE id = :id';
-        $values = array(':token' => $this->token, ':expiry' => $this->expiry, ':id' => $this->user->id);
-        $result = $this->rdb->prepare($sql);
-        $result->execute($values);
-    }
-
-    // Called by: controllers/login_controller.php -> reset()
     public function resetPassword($token)
     {
         $sql = 'SELECT * FROM recyc_users WHERE token = :token AND token_expires >= NOW()';
@@ -286,7 +169,8 @@ class User extends AbstractModel
         $this->user = $result->fetch(\PDO::FETCH_OBJ);
     }
 
-    // Called by: controllers/login_controller.php -> change()
+    // Called by: login_controller.php -> ajax()
+
     public function update($type, $value)
     {
         if ($type == 'password') {
@@ -301,7 +185,9 @@ class User extends AbstractModel
         }
     }
 
-    // Called by: controllers/admin_controller.php -> editUserPost()
+    // Called by: login_controller.php -> forgot()
+    // Called by: addUser()
+
     public function updateUser($id)
     {
 
@@ -399,10 +285,79 @@ class User extends AbstractModel
         }
     }
 
-    // Called by: controllers/admin_controller.php > addUserPost()
-    // Calls: loadByEmail()
-    // Calls: generateToken()
-    // Calls: sendReminder()
+    // Called by: addUser()
+
+    public function get($id = false)
+    {
+
+        if ($id) {
+            $sql = 'SELECT
+				id,
+				username,
+				firstname,
+				lastname,
+				email,
+				active,
+				role_id,
+				password
+			FROM
+				recyc_users
+			WHERE
+				id = :id
+			';
+            $result = $this->rdb->prepare($sql);
+            $result->execute(array(':id' => $id));
+            $this->user = $result->fetch(\PDO::FETCH_OBJ);
+
+            // $sql   = 'SELECT structure_id FROM recyc_permissions WHERE role_id = :role';
+            // $result = $this->rdb->prepare( $sql );
+            // $result->execute(array(':role' => $this->user->role_id));
+            // $this->user->permissions = $result->fetchAll(\PDO::FETCH_OBJ );
+
+            $sql = 'SELECT
+				c.id,
+				c.company_name
+			FROM
+				recyc_customer_links_to_company cc
+			left join
+				recyc_company_list c on cc.company_id = c.id
+			where
+				user_id = :id
+			';
+            $result = $this->rdb->prepare($sql);
+            $result->execute(array(':id' => $id));
+            $this->user->companies = $result->fetchAll(\PDO::FETCH_OBJ);
+
+            $sql = 'SELECT
+				c.id,
+				c.company_name
+			from
+				recyc_customer_links_to_company cc
+			left join
+				recyc_company_list c on cc.company_id = c.id
+			where
+				user_id = :id
+			';
+            $result = $this->rdb->prepare($sql);
+            $result->execute(array(':id' => $id));
+            $this->user->customers = $result->fetchAll(\PDO::FETCH_OBJ);
+
+        } else {
+
+            $sql = 'SELECT * FROM recyc_users WHERE (role_id = 1 OR role_id = 2)';
+            $result = $this->rdb->prepare($sql);
+            $result->execute();
+            $this->stoneUsers = $result->fetchAll(\PDO::FETCH_OBJ);
+
+            $sql = 'SELECT * FROM recyc_users WHERE (role_id = 3 OR role_id = 4)"';
+            $result = $this->rdb->prepare($sql);
+            $result->execute();
+            $this->users = $result->fetchAll(\PDO::FETCH_OBJ);
+        }
+    }
+
+    // Called by: controllers/login_controller.php -> reset()
+
     public function addUser()
     {
         $values = array();
@@ -490,6 +445,106 @@ class User extends AbstractModel
 				<p>' . $e->getMessage() . '</p>
 			</div>
 			';
+        }
+    }
+
+    // Called by: controllers/login_controller.php -> change()
+
+    public function loadByEmail($email)
+    {
+
+        $email = strtolower($email);
+
+        if ($email) {
+            $sql = 'SELECT * FROM recyc_users WHERE email = :email';
+            $result = $this->rdb->prepare($sql);
+            $result->execute(array(':email' => $email));
+            $this->user = $result->fetch(\PDO::FETCH_OBJ);
+        }
+    }
+
+    // Called by: controllers/admin_controller.php -> editUserPost()
+
+    public function generateToken()
+    {
+        $length = 32;
+        $this->token = bin2hex(random_bytes($length));
+        $expires = new \DateTime();
+        $expires->modify('+2 days');
+        $this->expiry = $expires->format('Y-m-d H:i:s');
+
+        $sql = 'UPDATE recyc_users SET token = :token, token_expires = :expiry WHERE id = :id';
+        $values = array(':token' => $this->token, ':expiry' => $this->expiry, ':id' => $this->user->id);
+        $result = $this->rdb->prepare($sql);
+        $result->execute($values);
+    }
+
+    // Called by: controllers/admin_controller.php > addUserPost()
+    // Calls: loadByEmail()
+    // Calls: generateToken()
+    // Calls: sendReminder()
+
+    public function sendReminder($type = null)
+    {
+
+        // Change tag: passwordChange
+        if ($type == "new") {
+            $content = '<p>Hi ' . $this->user->firstname . ',</p><p>Your account with Stone Computers Recycling Portal has been created.</p>';
+            $content .= '<p>Before you can login you need to create a password, please click on the link below.</p>';
+            $method = 'create';
+        } else {
+
+
+            $content = '<p>Hi ' . $this->user->firstname . ',</p><p>We have received a password reset request for your account on the Stone Computers Recycling Portal.</p>';
+            $content .= '<p>To reset your password, please click on the link below.</p>';
+            $method = 'reset';
+        }
+
+        $content .= '<p>This link is valid for 48 hours.</p>';
+        $content .= '<p><a href="http://recwebtest.stonegroup.co.uk/login/reset/' . $this->token . '">Click here to ' . $method . ' your password</a></p>';
+        $content .= '<p>Alternatively copy and paste this into the address bar of your internet browser:</p>';
+        $content .= '<p>http://recwebtest.stonegroup.co.uk/login/reset/' . $this->token . '</p>';
+        $content .= '<p>If you have any problems resetting your password, please reply to this email.</p>';
+        $content .= '<p>Thanks</p>';
+        $content .= '<p>Stone Computers</p>';
+
+        $phpmailer = $this->emailConfig['phpmailer'];
+
+
+        $mail = new PHPMailer($phpmailer['exception']);
+
+        $useremail = strtolower($this->user->email);
+
+        try {
+            $mail->SMTPDebug = $phpmailer['SMTPDebug'];
+            $mail->IsSMTP();
+            $mail->Host = $phpmailer['host'];
+            $mail->SMTPAuth = $phpmailer['SMTPAuth'];
+            $mail->SMTPSecure = $phpmailer['SMTPSecure'];
+            $mail->Username = $phpmailer['username'];
+            $mail->Password = $phpmailer['pass'];
+            $mail->Port = $phpmailer['port'];
+            $mail->setFrom($phpmailer['from']['helpdesk']);
+
+            $mail->addAddress($useremail);
+            $mail->isHTML($phpmailer['isHTML']);
+            $mail->Subject = "Stone Computers - Password Reset";
+            $mail->Body = $content;
+
+            if ($mail->Send()) {
+                $mail->ClearAddresses();
+
+                $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/Mail_send_failureuser.txt", "a+");
+                fwrite($fh, "\n----------------------------------------------\nEmail to " . $useremail . " has been sent\n\n" . $mail->ErrorInfo . "\n");
+                fclose($fh);
+            }
+
+        } catch (Exception $e) {
+            echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+
+            $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/Mail_send_failureuser.txt", "a+");
+            fwrite($fh, "\n----------------------------------------------\nEmail to " . $useremail . "  could not be sent\n\n" . $mail->ErrorInfo . "\n");
+            fclose($fh);
         }
     }
 

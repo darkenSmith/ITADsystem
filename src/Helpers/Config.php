@@ -44,12 +44,12 @@ class Config
     }
 
     /**
-     * @param $file
-     * @param false $process_sections
-     * @param int $scanner_mode
-     * @return array|false|mixed
+     * @param string $file
+     * @param bool $process_sections
+     * @param bool|int $scanner_mode
+     * @return array|null
      */
-    private function parse($file, $process_sections = false, $scanner_mode = INI_SCANNER_NORMAL)
+    private function parse(string $file, bool $process_sections = false, bool $scanner_mode = INI_SCANNER_NORMAL): ?array
     {
         $explode_str = '.';
         $escape_char = "'";

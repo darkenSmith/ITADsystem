@@ -1,10 +1,10 @@
 <?php
-	$data       = $info->company->companies[0]->data;
-    $summary    = $info->company->companies[0]->summary;
-    $collections= $info->company->companies[0]->collections;
+$data = $info->company->companies[0]->data;
+$summary = $info->company->companies[0]->summary;
+$collections = $info->company->companies[0]->collections;
 ?>
 <div class="row">
-    <h2><?php echo $data->company_name;?></h2>
+    <h2><?php echo $data->company_name; ?></h2>
 </div>
 
 <div class="row">

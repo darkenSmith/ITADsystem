@@ -10,7 +10,6 @@ define('VIEW_DIR', __DIR__ . '/views/');
 define('TEMPLATE_DIR', VIEW_DIR . 'template/');
 define('LAYOUT_DIR', VIEW_DIR . 'layout/');
 
-
 require_once('vendor/autoload.php');
 
 try {
@@ -39,8 +38,8 @@ try {
                 require_once(LAYOUT_DIR . 'layout.php');
             }
         }
-    } else {
 
+    } else {
         if (isset($_GET['controller']) && isset($_GET['action'])) {
             $app->setView($_GET['controller'], $_GET['action']);
         } else {

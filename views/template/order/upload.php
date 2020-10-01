@@ -1,10 +1,10 @@
-
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h3 class="panel-title">Upload New File</h3>
     </div>
     <div class="panel-body">
-        <form role="form" class="form-inline" method="post" enctype="multipart/form-data" name="form1" id="form1" action="/order/upload">
+        <form role="form" class="form-inline" method="post" enctype="multipart/form-data" name="form1" id="form1"
+              action="/order/upload">
             <div class="form-group">
                 <label for="document">File Upload</label>
                 <select class="form-control" name="document">

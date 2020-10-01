@@ -14,6 +14,12 @@ class LoginController extends AbstractController
     // Calls: models/user.php > login()
     public function ajax()
     {
+        if (isset($_GET['isAjax'])) {
+            $user = new User();
+            echo $user->ajaxLogin();
+            exit();
+        }
+
         $user = new User();
         $user->login();
     }
@@ -23,7 +29,7 @@ class LoginController extends AbstractController
     {
         if (isset($_POST)) {
             $password = md5(stripslashes($_POST['password']));
-            $data = new user();
+            $data = new User();
 
             $data->get($_POST['user']);
             $data->update('password', $password);
@@ -45,7 +51,7 @@ class LoginController extends AbstractController
     {
         if (isset($_POST['email'])) {
             $email = stripslashes(strtolower($_POST['email']));
-            $user = new user();
+            $user = new User();
             $user->loadByEmail($email);
 
             if ($user->user) {

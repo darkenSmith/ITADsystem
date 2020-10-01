@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Helpers;
 
 /**
@@ -9,5 +8,10 @@ namespace App\Helpers;
  */
 interface TemplateInterface
 {
+
+    /**
+     * @param string $template
+     * @param array $vars
+     */
     public function view(string $template, array $vars = []): void;
 }

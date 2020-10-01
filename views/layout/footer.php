@@ -1,6 +1,6 @@
 <footer class="footer">
     <div class="container">
-        <p class="text-muted">&copy; Stone Computers <?php echo date( 'Y' ); ?> </p>
+        <p class="text-muted">&copy; Stone Computers <?php echo date('Y'); ?> </p>
     </div>
 </footer>
 

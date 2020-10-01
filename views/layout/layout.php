@@ -7,7 +7,7 @@ if(!isset($_SESSION)){
 <html lang="en">
     <?php require_once LAYOUT_DIR . 'head.php'; ?>
     <body>
-    <?php require_once( LAYOUT_DIR . 'header.php' ); ?>
+    <?php require_once( LAYOUT_DIR . 'header.php'); ?>
     <div class="<?php echo $app->container; ?>">
         <?php
         if($layout == 1){ // two column layout

@@ -16,6 +16,9 @@ class Order extends AbstractModel
     public $lineItems;
     public $newFiles;
 
+    /**
+     * Order constructor.
+     */
     public function __construct()
     {
         $this->rdb = Database::getInstance('recycling');
@@ -72,5 +75,4 @@ class Order extends AbstractModel
         $result->execute(array(':order' => $this->detail->sales_order_number));
         $this->lineItems = $result->fetchAll(\PDO::FETCH_OBJ);
     }
-
 }

@@ -52,15 +52,12 @@ class Company extends AbstractModel
                 $this->checkFiles($company->collections);
 
             }
-
         }
-        unset($this->rdb);
-        unset($this->gdb);
+        unset($this->rdb, $this->gdb);
     }
 
     public function loadById($id, $return = false)
     {
-
         $results = new \stdClass();
 
         if ($_SESSION['user']['role_id'] == 1 || $_SESSION['user']['role_id'] == 2) {
@@ -106,7 +103,6 @@ class Company extends AbstractModel
         $result = $this->rdb->prepare($sql);
         $result->execute(array(':user' => $this->userId));
         $this->customers = $result->fetchAll(\PDO::FETCH_OBJ);
-
     }
 
     public function getUnallocated()
@@ -141,8 +137,8 @@ class Company extends AbstractModel
         $result = $this->rdb->prepare($sql);
         $result->execute(array(':company' => $id));
         $data = $result->fetchAll(\PDO::FETCH_OBJ);
-        return $data;
 
+        return $data;
     }
 
     public function claim()
@@ -157,7 +153,6 @@ class Company extends AbstractModel
 
     public function checkFiles($collections)
     {
-
         foreach ($collections as $collection) {
             $files = array(
                 'asset' => 'Asset-Management-Report.pdf',
@@ -240,9 +235,6 @@ class Company extends AbstractModel
 					WHERE greenoak_id = :greenoak";
                     $result = $this->rdb->prepare($sql);
                     $result->execute(array(':greenoak' => $webUser->company_id, ':cmp' => $webUser->ccmp));
-                    //$data = $result->fetch(PDO::FETCH_OBJ);
-
-
                 }
 
                 if (empty($exists)) {
@@ -306,6 +298,5 @@ class Company extends AbstractModel
         if ($return) {
             echo $count . ' New Companies created<br>';
         }
-
     }
 }
