@@ -18,16 +18,16 @@ try {
 
     $app->getHeader();
     if (!isset($_SESSION['user']['id'])) {
-        if (isset($_GET['controller']) && isset($_GET['action'])) {
+        if (isset($_GET['controller'], $_GET['action'])) {
             $redir = $_GET['controller'] . '/' . $_GET['action'];
         } else {
             $redir = false;
         }
 
-        if (isset($_GET['controller']) && isset($_GET['action'])) {
+        if (isset($_GET['controller'], $_GET['action'])) {
             $app->setView($_GET['controller'], $_GET['action']);
         } else {
-            $app->setView('login', 'index', $redir);
+            $app->setView('login', 'index');
         }
 
         if ($app->isAllowed()) {
@@ -40,7 +40,7 @@ try {
         }
 
     } else {
-        if (isset($_GET['controller']) && isset($_GET['action'])) {
+        if (isset($_GET['controller'], $_GET['action'])) {
             $app->setView($_GET['controller'], $_GET['action']);
         } else {
             $app->setView();

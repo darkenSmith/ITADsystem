@@ -118,7 +118,11 @@ final class App
         $this->controllers = $results;
     }
 
-    public function setView($controller = 'pages', $action = 'home')
+    /**
+     * @param string $controller
+     * @param string $action
+     */
+    public function setView(string $controller = 'pages', string $action = 'home')
     {
         $this->controller = $controller;
         $this->action = $action;
