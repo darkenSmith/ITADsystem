@@ -1,0 +1,17 @@
+{
+    "type": "itadportal",
+    "license": "proprietary",
+    "require": {
+        "vgrem/php-spo": "dev-master",
+        "thybag/php-sharepoint-lists-api": "dev-master",
+        "phpmailer/phpmailer": "^6.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "src\\": "src/",
+            "App\\": "src/",
+            "Views\\": "src/Views/"
+
+        }
+    }
+}
