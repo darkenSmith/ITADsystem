@@ -11,9 +11,6 @@ use App\Helpers\Database;
 abstract class AbstractModel
 {
     public $rdb;
-    public $ldb;
-    public $sdb;
-    public $gdb;
 
     /**
      * AbstractModel constructor.

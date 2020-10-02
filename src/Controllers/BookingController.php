@@ -30,10 +30,4 @@ class BookingController extends AbstractController
         echo "<h1>New Collection Request</h1>";
         echo "<iframe src='https://stoneitad.stonegroup.co.uk/itadbooking/' frameborder='0' width='100%' height='2000'></iframe>";
     }
-
-    public function save(): void
-    {
-        $collection = new Collection();
-        $collection->saveCollection();
-    }
 }

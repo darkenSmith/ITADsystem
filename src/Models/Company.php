@@ -29,8 +29,6 @@ class Company extends AbstractModel
             $this->userRole = 1;
         }
 
-        $this->sdb = Database::getInstance('sql01');
-        $this->gdb = Database::getInstance('greenoak');
         parent::__construct();
     }
 
@@ -50,7 +48,7 @@ class Company extends AbstractModel
                 $this->checkFiles($company->collections);
             }
         }
-        unset($this->rdb, $this->gdb);
+        unset($this->rdb);
     }
 
     public function loadById($id, $return = false)
@@ -134,14 +132,6 @@ class Company extends AbstractModel
         return $data;
     }
 
-    public function claim()
-    {
-        $id = $_POST['company'];
-        $bdm = $_SESSION['user']['id'];
-        $sql = 'INSERT INTO recyc_bdm_to_company (user_id,company_id) VALUES  (:bdm , :company)';
-        $result = $this->rdb->prepare($sql);
-        $result->execute(array(':company' => $id, ':bdm' => $bdm));
-    }
 
     public function checkFiles($collections)
     {
@@ -180,112 +170,6 @@ class Company extends AbstractModel
                 $collection->files[$dir] = $newFile->filename;
             }
             $e = 123;
-        }
-    }
-
-    public function refresh($return = true)
-    {
-        $sql = "SELECT convert(varchar(255),[CompanyID]) as 'company_id', replace(CompanyName,'''', '') as 'compname', CompanyDescription, CRMNumber as 'ccmp', InvoiceAddressPostCode as 'postcode' FROM [dbo].[Company]";
-        $result = $this->gdb->prepare($sql);
-        $result->execute();
-        $data = $result->fetchAll(\PDO::FETCH_OBJ);
-        $count = 0;
-
-        if (isset($data)) {
-            foreach ($data as $webUser) {
-                $sql = "SELECT * from recyc_company_sync WHERE greenoak_id = :greenoak";
-                $result = $this->rdb->prepare($sql);
-                $result->execute(array(':greenoak' => $webUser->company_id));
-                $exists = $result->fetchAll(\PDO::FETCH_OBJ);
-
-                $sql2 = "SELECT * from companies WHERE CMP = :cmpnum";
-                $result2 = $this->sdb->prepare($sql2);
-                $result2->execute(array(':cmpnum' => $webUser->ccmp));
-                $exists2 = $result2->fetchall(\PDO::FETCH_OBJ);
-
-                if (empty($exists2)) {
-                    $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/shouldbeuploading.txt", "a+");
-                    fwrite($fh, $webUser->compname . "\n");
-                    fclose($fh);
-
-                    $sql3 = "INSERT into companies(CompanyName, Location, cmp, dateadded, Department, owner )
-					VALUES (:name,:loc,:cmp, GETDATE(), 'new', 'new')";
-                    $result2 = $this->sdb->prepare($sql3);
-                    $result2->execute(array(':name' => $webUser->compname, ':loc' => $webUser->postcode, ':cmp' => $webUser->ccmp));
-                    //$data = $result->fetch(PDO::FETCH_OBJ);
-                    $fh3 = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/updatescomoanygreen.txt", "a+");
-                    fwrite($fh3, print_r($exists2, true) . "\n");
-                    fclose($fh3);
-                }
-
-//// UPDATES CMP IN WEB DB
-
-                if (!empty($exists)) {
-                    $sql = "UPDATE recyc_company_sync
-					SET CMP = :cmp
-					WHERE greenoak_id = :greenoak";
-                    $result = $this->rdb->prepare($sql);
-                    $result->execute(array(':greenoak' => $webUser->company_id, ':cmp' => $webUser->ccmp));
-                }
-
-                if (empty($exists)) {
-                    $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/doesntmatchweb.txt", "a+");
-                    fwrite($fh, print_r($exists, true) . "yes" . "\n");
-                    fclose($fh);
-                    //get all the company data we need to set them up
-                    $sql = "SELECT CompanyName, PrimaryAddressLine1,PrimaryAddressLine2,PrimaryAddressLine3,PrimaryAddressLine4 ,PrimaryAddressTown, PrimaryAddressPostCode, Telephone, Email, SiteCode, SICCode, CRMNumber
-							FROM [dbo].[Company] WHERE [CompanyID] = :greenoak";
-                    $result = $this->gdb->prepare($sql);
-                    $result->execute(array(':greenoak' => $webUser->company_id));
-                    $data = $result->fetch(\PDO::FETCH_OBJ);
-
-                    $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/shouldinsertcmp.txt", "a+");
-                    fwrite($fh, print_r($data, true) . "\n");
-                    fclose($fh);
-
-                    if (isset($data)) {
-                        //add first to company table, and then once we have the company ID add to the sync table.
-                        $sql = "INSERT INTO recyc_company_list (company_name, portal_requirement) VALUES (:company, 1)";
-                        $result = $this->rdb->prepare($sql);
-                        $result->execute(array(':company' => $data->CompanyName));
-
-                        $comId = $this->rdb->lastInsertId();
-
-                        if ($comId != 0) {
-                            $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP) VALUES (:recyc,:greenoak,:company,:cmp)";
-                            $result = $this->rdb->prepare($sql);
-                            $result->execute(array(':recyc' => $comId, ':greenoak' => $webUser->company_id, ':company' => $data->CompanyName, ':cmp' => $data->CRMNumber));
-
-                            $sql = "INSERT INTO recyc_bdm_to_company (user_id,company_id) VALUES (1,:company)";
-                            $result = $this->rdb->prepare($sql);
-                            $result->execute(array(':company' => $comId));
-
-                            $owner = $webUser->CompanyDescription;
-                            $parts = explode('#', $owner);
-                            $owner = isset($parts[1]) ? $parts[1] : 'ITAD@stonegroup.co.uk';
-                            if (isset($owner)) {
-                                $sql = "SELECT id from recyc_users WHERE username = :owner";
-                                $result = $this->rdb->prepare($sql);
-                                $result->execute(array(':owner' => $owner));
-                                $ownerId = $result->fetch(\PDO::FETCH_COLUMN);
-
-                                if (isset($ownerId)) {
-                                    $sql = "INSERT INTO recyc_bdm_to_company (user_id,company_id) VALUES (:owner,:company)";
-                                    $result = $this->rdb->prepare($sql);
-                                    $result->execute(array(':company' => $comId, ':owner' => $ownerId));
-                                }
-                            }
-
-                            $count++;
-                        } else {
-                            echo 'error adding ' . $data->CompanyName . '<br>';
-                        }
-                    }
-                }
-            }
-        }
-        if ($return) {
-            echo $count . ' New Companies created<br>';
         }
     }
 }
