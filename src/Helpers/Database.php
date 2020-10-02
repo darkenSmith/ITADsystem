@@ -19,7 +19,6 @@ class Database
     public static function getInstance(?string $type = null)
     {
         try {
-
             $databaseConfig = Config::getInstance()->get('database');
 
             if (!$type && $databaseConfig) {
@@ -52,7 +51,6 @@ class Database
                 $database['user'],
                 $database['pass']
             );
-
         } catch (\PDOException $e) {
             echo "server connection issue please contact MIS";
             die;

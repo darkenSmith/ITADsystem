@@ -2,16 +2,21 @@
     "type": "itadportal",
     "license": "proprietary",
     "require": {
-        "vgrem/php-spo": "dev-master",
-        "thybag/php-sharepoint-lists-api": "dev-master",
         "phpmailer/phpmailer": "^6.1"
+    },
+    "require-dev": {
+        "sensiolabs/security-checker": "^5.0",
+        "squizlabs/php_codesniffer": "^3.4"
     },
     "autoload": {
         "psr-4": {
             "src\\": "src/",
-            "App\\": "src/",
-            "Views\\": "src/Views/"
-
+            "App\\": "src/"
         }
+    },
+    "scripts": {
+        "check-style": "./vendor/bin/phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 0 --runtime-set ignore_warnings_on_exit 1 ./src/",
+        "fix-style": "./vendor/bin/phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 0 --runtime-set ignore_warnings_on_exit 1 ./src/",
+        "check-security": "./vendor/bin/security-checker security:check"
     }
 }

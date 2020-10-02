@@ -42,15 +42,12 @@ class Company extends AbstractModel
         $this->companies = $result->fetchAll(\PDO::FETCH_OBJ);
 
         if ($this->companies) {
-
             foreach ($this->companies as $company) {
-
                 $data = $this->loadById($company->company_id);
                 foreach ($data as $key => $value) {
                     $company->{$key} = $value;
                 }
                 $this->checkFiles($company->collections);
-
             }
         }
         unset($this->rdb, $this->gdb);
@@ -92,7 +89,6 @@ class Company extends AbstractModel
         } else {
             $this->auth = false;
         }
-
     }
 
     public function getCustomers()
@@ -114,7 +110,6 @@ class Company extends AbstractModel
         $result = $this->rdb->prepare($sql);
         $result->execute(array(':user' => $this->userId));
         $this->unallocated = $result->fetchAll(\PDO::FETCH_OBJ);
-
     }
 
     public function getSummary($id)
@@ -127,8 +122,6 @@ class Company extends AbstractModel
         $result->execute(array(':company' => $id));
         $data = $result->fetchAll(\PDO::FETCH_OBJ);
         return $data;
-
-
     }
 
     public function getCollections($id)
@@ -148,7 +141,6 @@ class Company extends AbstractModel
         $sql = 'INSERT INTO recyc_bdm_to_company (user_id,company_id) VALUES  (:bdm , :company)';
         $result = $this->rdb->prepare($sql);
         $result->execute(array(':company' => $id, ':bdm' => $bdm));
-
     }
 
     public function checkFiles($collections)
@@ -229,7 +221,6 @@ class Company extends AbstractModel
 //// UPDATES CMP IN WEB DB
 
                 if (!empty($exists)) {
-
                     $sql = "UPDATE recyc_company_sync
 					SET CMP = :cmp
 					WHERE greenoak_id = :greenoak";
@@ -238,7 +229,6 @@ class Company extends AbstractModel
                 }
 
                 if (empty($exists)) {
-
                     $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/doesntmatchweb.txt", "a+");
                     fwrite($fh, print_r($exists, true) . "yes" . "\n");
                     fclose($fh);
@@ -287,7 +277,6 @@ class Company extends AbstractModel
                             }
 
                             $count++;
-
                         } else {
                             echo 'error adding ' . $data->CompanyName . '<br>';
                         }

@@ -40,7 +40,6 @@ class LoginController extends AbstractController
 				<h4>Password Changed</h4>
 				<p>Please login using your new password.</p>
 			</div>';
-
         } else {
             echo 'Unable to change Password';
         }
@@ -67,7 +66,6 @@ class LoginController extends AbstractController
 					<p>Please check your email for details on how to reset your password.</p>
 				</div>
 				';
-
             } else {
                 echo '
 				<div class="alert alert-danger fade-in" id="reset-container" >
@@ -77,7 +75,6 @@ class LoginController extends AbstractController
 				</div>
 				';
             }
-
         } else {
             echo 'Invalid Email Address';
         }
@@ -87,7 +84,6 @@ class LoginController extends AbstractController
     {
         if (isset($_SESSION['user']['id'])) {
             header('Location: /');
-
         } else {
             if (isset($_GET['controller']) && isset($_GET['action'])) {
                 $redirect = '/' . $_GET['controller'] . '/' . $_GET['action'];

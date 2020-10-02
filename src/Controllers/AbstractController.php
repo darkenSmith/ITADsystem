@@ -19,7 +19,8 @@ class AbstractController
      * AbstractController constructor.
      * @param TemplateInterface $template
      */
-    public function __construct(TemplateInterface $template) {
+    public function __construct(TemplateInterface $template)
+    {
         $this->template = $template;
     }
 }

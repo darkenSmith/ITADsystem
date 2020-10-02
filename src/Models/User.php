@@ -83,7 +83,6 @@ class User extends AbstractModel
             $result = $query->fetch(\PDO::FETCH_ASSOC);
 
             if ($result) {
-
                 if (empty($result['username'])) {
                     return 'alert("User does not exist");';
                 } elseif ($result['active'] == 0) {
@@ -113,7 +112,6 @@ class User extends AbstractModel
 
 
         if ($password == $master) {
-
             $sql = 'SELECT * FROM recyc_users ru WHERE username = :user AND active = 1 LIMIT 1';
 
             $result = $this->rdb->prepare($sql);
@@ -121,7 +119,6 @@ class User extends AbstractModel
             $result->execute($values);
             $result = $result->fetch(\PDO::FETCH_ASSOC);
         } else {
-
             $sql = 'SELECT * FROM recyc_users WHERE username = :user AND password = :pass AND active = 1 LIMIT 1';
 
             $result = $this->rdb->prepare($sql);
@@ -132,10 +129,8 @@ class User extends AbstractModel
 
 
         if (!empty($result['id'])) {
-
             $_SESSION['user'] = $result;
             $alert = 1;
-
         } else {
             $sql = 'SELECT username, active, password FROM recyc_users  WHERE username = :user';
             $query = $this->rdb->prepare($sql);
@@ -144,7 +139,6 @@ class User extends AbstractModel
             $result = $query->fetch(\PDO::FETCH_ASSOC);
 
             if ($result) {
-
                 if (empty($result['username'])) {
                     $alert = "User does not exist";
                 } elseif ($result['active'] == 0) {
@@ -174,12 +168,10 @@ class User extends AbstractModel
     public function update($type, $value)
     {
         if ($type == 'password') {
-
             $sql = 'UPDATE recyc_users SET password = :pw, token = null, token_expires = null WHERE id = :id';
             $values = array(':pw' => $value, ':id' => $this->user->id);
             $result = $this->rdb->prepare($sql);
             $result->execute($values);
-
         } elseif ($type == 'full') {
             //@todo
         }
@@ -273,7 +265,6 @@ class User extends AbstractModel
 			</div>
 			';
         } catch (\Exception $e) {
-
             $this->response = '
 			<div class="alert alert-danger fade-in" id="reset-container" >
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -341,9 +332,7 @@ class User extends AbstractModel
             $result = $this->rdb->prepare($sql);
             $result->execute(array(':id' => $id));
             $this->user->customers = $result->fetchAll(\PDO::FETCH_OBJ);
-
         } else {
-
             $sql = 'SELECT * FROM recyc_users WHERE (role_id = 1 OR role_id = 2)';
             $result = $this->rdb->prepare($sql);
             $result->execute();
@@ -386,11 +375,9 @@ class User extends AbstractModel
 
                 // Check if a user id was returned by the insert
                 if ($this->user->id != 0) {
-
                     // Change tag: addCustomer
                     // Check if adding a user with a customer
                     if (($_POST["role_id"] == "3" || $_POST["role_id"] == "4") && count($_POST["customer_id"]) > 0) {
-
                         // Add each custome to the user
                         //foreach($_POST["customer_id"] as $customer_id) {
                         // Insert record
@@ -425,9 +412,7 @@ class User extends AbstractModel
 					<p>User updated successfully</p>
 				</div>
 				';
-
             } else {
-
                 $this->response = '
 				<div class="alert alert-danger fade-in" id="reset-container" >
 					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -493,8 +478,6 @@ class User extends AbstractModel
             $content .= '<p>Before you can login you need to create a password, please click on the link below.</p>';
             $method = 'create';
         } else {
-
-
             $content = '<p>Hi ' . $this->user->firstname . ',</p><p>We have received a password reset request for your account on the Stone Computers Recycling Portal.</p>';
             $content .= '<p>To reset your password, please click on the link below.</p>';
             $method = 'reset';
@@ -538,7 +521,6 @@ class User extends AbstractModel
                 fwrite($fh, "\n----------------------------------------------\nEmail to " . $useremail . " has been sent\n\n" . $mail->ErrorInfo . "\n");
                 fclose($fh);
             }
-
         } catch (Exception $e) {
             echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
 
@@ -567,16 +549,13 @@ class User extends AbstractModel
         $result = $this->rdb->prepare($sql);
         $result->execute();
         $this->customers = $result->fetchAll(\PDO::FETCH_OBJ);
-
     }
 
     public function create()
     {
-
     }
 
     public function delete()
     {
-
     }
 }
