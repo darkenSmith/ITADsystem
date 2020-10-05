@@ -21,7 +21,6 @@ class Order extends AbstractModel
      */
     public function __construct()
     {
-        $this->rdb = Database::getInstance('recycling');
         parent::__construct();
     }
 

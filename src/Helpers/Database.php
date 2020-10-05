@@ -34,16 +34,19 @@ class Database
             if ($database['driver'] === 'sqlsrv') {
                 $driver = sprintf('%s:%s', $database['driver'], 'Server');
                 $dbName = sprintf('%s=%s', 'Database', $database['dbname']);
+                $port = '';
             } else {
                 $driver = sprintf('%s:%s', $database['driver'], 'host');
                 $dbName = sprintf('%s=%s', 'dbname', $database['dbname']);
+                $port = sprintf('%s=%s;', 'port', $database['port']);
             }
 
             $dsn = sprintf(
-                '%s=%s;%s;',
+                '%s=%s;%s;%s',
                 $driver,
                 $database['host'],
-                $dbName
+                $dbName,
+                $port
             );
 
             self::$instance = new \PDO(

@@ -19,7 +19,6 @@ class Collection extends AbstractModel
      */
     public function __construct()
     {
-        $this->rdb = Database::getInstance('recycling');
         $this->heading = 'Collections';
 
         parent::__construct();
