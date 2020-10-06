@@ -29,10 +29,10 @@ class OrderController extends AbstractController
         $this->template->view(
             'order/details',
             [
-              'order' => $order
+                'order' => $order,
+                'app' => $app
             ]
         );
-        require_once(TEMPLATE_DIR . 'order/details.php');
     }
 
 
