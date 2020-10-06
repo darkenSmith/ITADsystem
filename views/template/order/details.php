@@ -28,7 +28,7 @@
 </div>
 <div class="row">
     <?php
-    if ($app->canUpload()) {
+    if (isset($app) && $app->canUpload()) {
         include_once('upload.php');
     }
 
@@ -68,7 +68,7 @@
                     echo '<td>' . $order->detail->sales_order_number . '</td>';
                     echo '<td>' . $file->file_type . '</td>';
                     echo '<td><a href="/order/download?newfile=' . $file->filename . '" class="btn btn-success">Download</a> </td>';
-                    if ($app->canUpload()) {
+                    if (isset($app) && $app->canUpload()) {
                         echo '<td><a href="/order/delete?newfile=' . $file->filename . '&view=' . $id . '" class="btn btn-danger">Delete</a> </td>';
                     } else {
                         echo '<td></td>';

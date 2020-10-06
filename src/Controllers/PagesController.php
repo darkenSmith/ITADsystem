@@ -20,7 +20,7 @@ class PagesController extends AbstractController
 
     public function home(): void
     {
-        set_time_limit(0);
+        // set_time_limit(0);
 
         $info = new Overview();
         $info->route();

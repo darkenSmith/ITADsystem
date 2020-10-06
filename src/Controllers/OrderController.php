@@ -94,11 +94,8 @@ class OrderController extends AbstractController
             $userFile = str_replace(' ', '-', $userFile[3]).$extension; //'.pdf';
 
           // Change tag: serverPath
-            if (php_uname("n") == "MIS-17") {
-                $filepath = $_SERVER["DOCUMENT_ROOT"]."/uploads/". $filename_original.".pdf";
-            } else {
-                $filepath = '/uploads/'. $filename_original.'.pdf';
-            }
+
+            $filepath = '/uploads/'. $filename_original.'.pdf';
 
             if (file_exists($filepath)) {
                 $data = file_get_contents($filepath);

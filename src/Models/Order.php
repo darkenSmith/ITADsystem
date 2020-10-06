@@ -32,9 +32,11 @@ class Order extends AbstractModel
         $result->execute(array(':id' => $id));
         $this->detail = $result->fetch(\PDO::FETCH_OBJ);
 
-        $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/datafromdet.txt", "a+");
-        fwrite($fh, print_r($this->detail, true) . "\n");
-        fclose($fh);
+        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/datafromdet.txt")) {
+            $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/datafromdet.txt", "a+");
+            fwrite($fh, print_r($this->detail, true) . "\n");
+            fclose($fh);
+        }
 
         $files = array(
             'asset' => 'Asset-Management-Report.pdf',
@@ -61,9 +63,11 @@ class Order extends AbstractModel
         $result->execute(array(':id' => $id));
         $newFiles = $result->fetchAll(\PDO::FETCH_OBJ);
 
-        $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/custfilesdetial.txt", "a+");
-        fwrite($fh, print_r($newFiles, true) . "\n");
-        fclose($fh);
+        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/custfilesdetial.txt")) {
+            $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/custfilesdetial.txt", "a+");
+            fwrite($fh, print_r($newFiles, true) . "\n");
+            fclose($fh);
+        }
 
         if ($newFiles) {
             $this->newFiles = $newFiles;

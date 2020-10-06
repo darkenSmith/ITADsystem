@@ -27,14 +27,6 @@ if ($app->isLoggedIn()) {
             </ul>
           </li>
           <li><a href='/login/logout'>Log Out</a></li>
-          <li><a href='#'>
-            ";
-    $ip = $_SERVER['REMOTE_ADDR'];
-    if (isset($_SESSION['user']['role_id']) && php_uname("n") == "STO-WRK-098") {
-        echo 'Currently logged in as role ID ' . $_SESSION['user']['role_id'];
-    }
-    echo "</a>
-          </li>
         </ul>
       </div>
       <!--/.nav-collapse -->
