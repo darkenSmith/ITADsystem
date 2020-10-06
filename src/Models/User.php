@@ -493,10 +493,11 @@ class User extends AbstractModel
 
         $phpmailer = $this->emailConfig['phpmailer'];
 
-
         $mail = new PHPMailer($phpmailer['exception']);
 
         $useremail = strtolower($this->user->email);
+
+        $file = $_SERVER["DOCUMENT_ROOT"] . "/RS_Files/Mail_send_failureuser.txt";
 
         try {
             $mail->SMTPDebug = $phpmailer['SMTPDebug'];
@@ -517,16 +518,19 @@ class User extends AbstractModel
             if ($mail->Send()) {
                 $mail->ClearAddresses();
 
-                $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/Mail_send_failureuser.txt", "a+");
-                fwrite($fh, "\n----------------------------------------------\nEmail to " . $useremail . " has been sent\n\n" . $mail->ErrorInfo . "\n");
-                fclose($fh);
+                if (is_writable($file)) {
+                    $fh = fopen($file, 'a+');
+                    fwrite($fh, "\n-\nEmail to " . $useremail . " has been sent\n\n" . $mail->ErrorInfo . "\n");
+                    fclose($fh);
+                }
             }
         } catch (Exception $e) {
             echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
-
-            $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/Mail_send_failureuser.txt", "a+");
-            fwrite($fh, "\n----------------------------------------------\nEmail to " . $useremail . "  could not be sent\n\n" . $mail->ErrorInfo . "\n");
-            fclose($fh);
+            if (is_writable($file)) {
+                $fh = fopen($file, 'a+');
+                fwrite($fh, "\n-\nEmail to " . $useremail . "  could not be sent\n\n" . $mail->ErrorInfo . "\n");
+                fclose($fh);
+            }
         }
     }
 

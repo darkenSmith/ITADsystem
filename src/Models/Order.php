@@ -32,8 +32,9 @@ class Order extends AbstractModel
         $result->execute(array(':id' => $id));
         $this->detail = $result->fetch(\PDO::FETCH_OBJ);
 
-        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/datafromdet.txt")) {
-            $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/datafromdet.txt", "a+");
+        $file = $_SERVER["DOCUMENT_ROOT"] . "/RS_Files/datafromdet.txt";
+        if (is_writable($file)) {
+            $fh = fopen($file, 'a+');
             fwrite($fh, print_r($this->detail, true) . "\n");
             fclose($fh);
         }
@@ -63,8 +64,9 @@ class Order extends AbstractModel
         $result->execute(array(':id' => $id));
         $newFiles = $result->fetchAll(\PDO::FETCH_OBJ);
 
-        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/custfilesdetial.txt")) {
-            $fh = fopen($_SERVER["DOCUMENT_ROOT"] . "/RS_Files/custfilesdetial.txt", "a+");
+        $file = $_SERVER["DOCUMENT_ROOT"] . "/RS_Files/custfilesdetial.txt";
+        if (is_writable($file)) {
+            $fh = fopen($file, 'a+');
             fwrite($fh, print_r($newFiles, true) . "\n");
             fclose($fh);
         }
