@@ -507,11 +507,11 @@ class User extends AbstractModel
             $mail->Username = $phpmailer['username'];
             $mail->Password = $phpmailer['pass'];
             $mail->Port = $phpmailer['port'];
-            $mail->setFrom($phpmailer['from']['helpdesk']);
+            $mail->setFrom($phpmailer['from']['ITADSystem']);
 
             $mail->addAddress($useremail);
             $mail->isHTML($phpmailer['isHTML']);
-            $mail->Subject = "Stone Computers - Password Reset";
+            $mail->Subject = "ITAD System - Password Reset";
             $mail->Body = $content;
 
             if ($mail->Send()) {
