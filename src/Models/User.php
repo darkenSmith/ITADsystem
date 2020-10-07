@@ -3,13 +3,6 @@
 namespace App\Models;
 
 use App\Helpers\Config;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-//require_once($_SERVER["DOCUMENT_ROOT"].'/RECbooking/src/Exception.php');
-//require_once($_SERVER["DOCUMENT_ROOT"].'/RECbooking/src/PHPMailer.php');
-//require_once($_SERVER["DOCUMENT_ROOT"].'/RECbooking/src/SMTP.php');
-//require_once($_SERVER["DOCUMENT_ROOT"].'/RECbooking/TCPDF/tcpdf.php');
 
 /**
  * Class User
@@ -471,7 +464,6 @@ class User extends AbstractModel
 
     public function sendReminder($type = null)
     {
-
         // Change tag: passwordChange
         if ($type == "new") {
             $content = '<p>Hi ' . $this->user->firstname . ',</p><p>Your account with Stone Computers Recycling Portal has been created.</p>';
@@ -491,44 +483,38 @@ class User extends AbstractModel
         $content .= '<p>Thanks</p>';
         $content .= '<p>Stone Computers</p>';
 
-        $phpmailer = $this->emailConfig['phpmailer'];
-
-        $mail = new PHPMailer($phpmailer['exception']);
+        $sendgridConfig = $this->emailConfig['sendgrid'];
 
         $useremail = strtolower($this->user->email);
 
         $file = $_SERVER["DOCUMENT_ROOT"] . "/RS_Files/Mail_send_failureuser.txt";
 
+        $email = new \SendGrid\Mail\Mail();
+
         try {
-            $mail->SMTPDebug = $phpmailer['SMTPDebug'];
-            $mail->IsSMTP();
-            $mail->Host = $phpmailer['host'];
-            $mail->SMTPAuth = $phpmailer['SMTPAuth'];
-            $mail->SMTPSecure = $phpmailer['SMTPSecure'];
-            $mail->Username = $phpmailer['username'];
-            $mail->Password = $phpmailer['pass'];
-            $mail->Port = $phpmailer['port'];
-            $mail->setFrom($phpmailer['from']['ITADSystem']);
+            $email->setFrom($sendgridConfig['from']['ITADSystem'], "ITAD System");
+            $email->setSubject("ITAD System - Password Reset");
+            $email->addTo($useremail);
+            $email->addContent("text/html", $content);
+            $sendgrid = new \SendGrid($sendgridConfig['api']['key']);
+            $response = $sendgrid->send($email);
 
-            $mail->addAddress($useremail);
-            $mail->isHTML($phpmailer['isHTML']);
-            $mail->Subject = "ITAD System - Password Reset";
-            $mail->Body = $content;
-
-            if ($mail->Send()) {
-                $mail->ClearAddresses();
-
-                if (is_writable($file)) {
-                    $fh = fopen($file, 'a+');
-                    fwrite($fh, "\n-\nEmail to " . $useremail . " has been sent\n\n" . $mail->ErrorInfo . "\n");
-                    fclose($fh);
-                }
+            if ($response->statusCode() !== 202) {
+                throw new Exception($response->body());
             }
-        } catch (Exception $e) {
-            echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+
             if (is_writable($file)) {
                 $fh = fopen($file, 'a+');
-                fwrite($fh, "\n-\nEmail to " . $useremail . "  could not be sent\n\n" . $mail->ErrorInfo . "\n");
+                fwrite($fh, "\n-\nEmail to " . $useremail . " has been sent\n\n" . $response->statusCode() . "\n");
+                fwrite($fh, "\n-\nBody " . $response->body() . "\n");
+                fwrite($fh, "\n-\nHeader " . json_encode($response->headers()) . "\n");
+                fclose($fh);
+            }
+        } catch (Exception $e) {
+            echo 'Message could not be sent. Error: ', $e->getMessage();
+            if (is_writable($file)) {
+                $fh = fopen($file, 'a+');
+                fwrite($fh, "\n-\nEmail to " . $useremail . "  could not be sent\n\n" . $e->getMessage() . "\n");
                 fclose($fh);
             }
         }
