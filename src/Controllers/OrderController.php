@@ -44,7 +44,7 @@ class OrderController extends AbstractController
             $userFile = explode('/', $filename);
             $userFile = $userFile[1];
 
-            $filepath = '/uploads/'. $filename;
+            $filepath = PROJECT_DIR . '/uploads/'. $filename;
 
             if (file_exists($filepath)) {
                 $data = file_get_contents($filepath);
@@ -94,22 +94,18 @@ class OrderController extends AbstractController
             $userFile = str_replace(' ', '-', $userFile[3]).$extension; //'.pdf';
 
           // Change tag: serverPath
-
-            $filepath = '/uploads/'. $filename_original.'.pdf';
-
+            $filepath = PROJECT_DIR . 'uploads/'. $filename_original.'.pdf';
             if (file_exists($filepath)) {
-                $data = file_get_contents($filepath);
-
-                header("Cache-Control: public");
                 header("Content-Description: File Transfer");
                 header("Content-Type: ".$format);
                 header('Content-Disposition: attachment; filename="'.$userFile.'"');
                 header("Content-Transfer-Encoding: binary");
                 header('Content-Length: '.filesize($filepath));
+                header('Pragma: no-cache');
               // Change tag: cleanOutput
                 ob_get_clean();
                 readfile($filepath);
-              // echo $data;
+                ob_end_flush();
             }
         }
     }
