@@ -44,6 +44,10 @@ Thumbs.db
 *.wmv
 
 /vendor/
+/tmp/
+/RS_Files/
+/booking/
+/logs/
 *.DS_Store
 
 app.ini

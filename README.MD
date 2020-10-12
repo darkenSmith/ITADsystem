@@ -22,3 +22,13 @@ composer install
 ```bash
 composer update
 ```
+
+
+
+# Folders 
+```
+/uploads
+/booking/uploads
+/logs
+/tmp
+```

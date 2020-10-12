@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\Config;
+use App\Helpers\Logger;
 
 /**
  * Class User
@@ -471,8 +472,6 @@ class User extends AbstractModel
 
         $useremail = strtolower($this->user->email);
 
-        $file = $_SERVER["DOCUMENT_ROOT"] . "/RS_Files/Mail_send_failureuser.txt";
-
         $email = new \SendGrid\Mail\Mail();
 
         try {
@@ -484,23 +483,20 @@ class User extends AbstractModel
             $response = $sendgrid->send($email);
 
             if ($response->statusCode() !== 202) {
-                throw new Exception($response->body());
+                throw new \Exception($response->body());
             }
 
-            if (is_writable($file)) {
-                $fh = fopen($file, 'a+');
-                fwrite($fh, "\n-\nEmail to " . $useremail . " has been sent\n\n" . $response->statusCode() . "\n");
-                fwrite($fh, "\n-\nBody " . $response->body() . "\n");
-                fwrite($fh, "\n-\nHeader " . json_encode($response->headers()) . "\n");
-                fclose($fh);
-            }
-        } catch (Exception $e) {
+            Logger::getInstance("Mail_send_success.log")->info(
+                "\n-\nEmail to " . $useremail . " has been sent\n\n". $response->statusCode() . "\n" .
+                "\n-\nBody " . $response->body() . "\n".
+                "\n-\nHeader " . json_encode($response->headers()) . "\n"
+            );
+        } catch (\Exception $e) {
             echo 'Message could not be sent. Error: ', $e->getMessage();
-            if (is_writable($file)) {
-                $fh = fopen($file, 'a+');
-                fwrite($fh, "\n-\nEmail to " . $useremail . "  could not be sent\n\n" . $e->getMessage() . "\n");
-                fclose($fh);
-            }
+
+            Logger::getInstance("Mail_send_failureuser.log")->warning(
+                "\n-\nEmail to " . $useremail . "  could not be sent\n\n" . $e->getMessage() . "\n"
+            );
         }
     }
 
