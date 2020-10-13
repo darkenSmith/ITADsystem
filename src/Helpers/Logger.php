@@ -11,8 +11,8 @@ use Monolog\Handler\StreamHandler;
 class Logger
 {
     private static $instance = null;
-    const DEFAULT_LOG_PATH = PROJECT_DIR . 'logs/';
-    const DEFAULT_LOG_FILE = 'log.log';
+    public const DEFAULT_LOG_PATH = PROJECT_DIR . 'logs/';
+    public const DEFAULT_LOG_FILE = 'log.log';
 
     /**
      * @var \Monolog\Logger
