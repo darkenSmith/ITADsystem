@@ -47,6 +47,7 @@ Thumbs.db
 /tmp/
 /RS_Files/
 /booking/
+/uploads/
 /logs/
 *.DS_Store
 
