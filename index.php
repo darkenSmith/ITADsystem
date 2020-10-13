@@ -59,6 +59,6 @@ try {
     }
 
 } catch (Exception $e) {
-    var_dump($e);
+    // var_dump($e);
     die;
 }

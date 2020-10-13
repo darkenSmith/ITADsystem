@@ -8,10 +8,10 @@ use App\Helpers\Logger;
 
 class Booking extends AbstractModel
 {
-    public const BOOKING_FOLDER = 'booking/';
+    public const BOOKING_FOLDER = 'booking';
     public const UPLOAD_FOLDER = 'uploads/';
     private $emailConfig;
-    private $emailReceiver = 'bulent.kocaman@stonegroup.co.uk'; // 'stoneITAD@stonegroup.co.uk';
+    private $emailReceiver = 'stoneITAD@stonegroup.co.uk';
 
     /**
      * Collection constructor.
@@ -228,7 +228,7 @@ WHERE row_num > 1;";
                 $response = $sendgrid->send($email);
 
                 if ($response->statusCode() !== 202) {
-                    throw new \Exception($response->body());
+                    throw new \RuntimeException($response->body());
                 }
 
                 echo 'Message has been sent';
@@ -311,6 +311,15 @@ WHERE row_num > 1;";
         }
 
         return $sql_string;
+    }
+
+    /**
+     * @param $path
+     * @return false|string
+     */
+    private function getRealPath($path)
+    {
+        return is_link($path) ? readlink($path) : $path;
     }
 
     public function sendFailedMailToRecycling()
@@ -434,7 +443,7 @@ where Request_id =  " . $_SESSION['rid'];
             if (isset($pics) && !empty($pics)) {
                 Logger::getInstance("attachments.log")->debug('pics', $pics);
                 foreach ($pics as $ff) {
-                    $fullpath = PROJECT_DIR . self::BOOKING_FOLDER . $ff['filename'];
+                    $fullpath = $this->getRealPath(PROJECT_DIR . self::BOOKING_FOLDER) . '/' . $ff['filename'];
 
                     $mimeContentType = mime_content_type($fullpath);
 
@@ -471,7 +480,7 @@ RequestID : ' . $_SESSION['rid'] . '.
             $response = $sendgrid->send($email);
 
             if ($response->statusCode() !== 202) {
-                throw new \Exception($response->body());
+                throw new \RuntimeException($response->body());
             }
             Logger::getInstance("sent.log")->debug('sent', ['yes']);
             $_SESSION['filestuff'] = '';
@@ -533,7 +542,7 @@ RequestID : ' . $_SESSION['rid'] . '.
         Logger::getInstance("isdel.log")->debug('del', [$del]);
 
         $uploadOk = 1;
-        $dir = PROJECT_DIR . self::BOOKING_FOLDER;
+        $dir = $this->getRealPath(PROJECT_DIR . self::BOOKING_FOLDER) . '/';
         $idpic = 0;
 
         $sqlupdate = "insert into customerPics(filename, upload_datetime, request_id) values(?, getdate(), ?)";
