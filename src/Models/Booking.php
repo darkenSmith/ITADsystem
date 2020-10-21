@@ -4,12 +4,13 @@ namespace App\Models;
 
 use App\Helpers\Config;
 use App\Helpers\Database;
+use App\Helpers\FileHelper;
 use App\Helpers\Logger;
 
 class Booking extends AbstractModel
 {
-    public const BOOKING_FOLDER = 'booking';
-    public const UPLOAD_FOLDER = 'uploads/';
+    public const BOOKING_FOLDER = 'uploads';
+    public const UPLOAD_FOLDER = 'images/';
     private $emailConfig;
     private $emailReceiver = 'stoneITAD@stonegroup.co.uk';
 
@@ -240,7 +241,6 @@ WHERE row_num > 1;";
 
             $sqlcheck = 'select Request_id from request where Request_id = ' . $_SESSION['rid'];
 
-
             $runcheck = $this->sdb->prepare($sqlcheck);
             $runcheck->execute();
 
@@ -311,15 +311,6 @@ WHERE row_num > 1;";
         }
 
         return $sql_string;
-    }
-
-    /**
-     * @param $path
-     * @return false|string
-     */
-    private function getRealPath($path)
-    {
-        return is_link($path) ? readlink($path) : $path;
     }
 
     public function sendFailedMailToRecycling()
@@ -442,8 +433,10 @@ where Request_id =  " . $_SESSION['rid'];
 
             if (isset($pics) && !empty($pics)) {
                 Logger::getInstance("attachments.log")->debug('pics', $pics);
+                $uploadDir = FileHelper::getInstance()->getRealPath(PROJECT_DIR . self::BOOKING_FOLDER);
+
                 foreach ($pics as $ff) {
-                    $fullpath = $this->getRealPath(PROJECT_DIR . self::BOOKING_FOLDER) . '/' . $ff['filename'];
+                    $fullpath = $uploadDir . '/' . $ff['filename'];
 
                     $mimeContentType = mime_content_type($fullpath);
 
@@ -542,7 +535,9 @@ RequestID : ' . $_SESSION['rid'] . '.
         Logger::getInstance("isdel.log")->debug('del', [$del]);
 
         $uploadOk = 1;
-        $dir = $this->getRealPath(PROJECT_DIR . self::BOOKING_FOLDER) . '/';
+        $uploadDir = FileHelper::getInstance()->getRealPath(PROJECT_DIR . self::BOOKING_FOLDER);
+
+        $dir = $uploadDir . '/';
         $idpic = 0;
 
         $sqlupdate = "insert into customerPics(filename, upload_datetime, request_id) values(?, getdate(), ?)";
@@ -586,7 +581,7 @@ RequestID : ' . $_SESSION['rid'] . '.
                         Logger::getInstance("uploadstatloc.log")->debug('uploadstatloc', [$Test]);
 
                         $idpic++;
-                        $loc =  self::UPLOAD_FOLDER . str_replace('\\', '/', $Test);
+                        $loc = self::UPLOAD_FOLDER . str_replace('\\', '/', $Test);
                         $filearr[] = $loc;
 
                         $_SESSION['filestuff'] = $filearr;
