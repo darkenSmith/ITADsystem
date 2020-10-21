@@ -44,7 +44,7 @@ class OrderController extends AbstractController
             $userFile = explode('/', $filename);
             $userFile = $userFile[1];
 
-            $filepath = PROJECT_DIR . '/uploads/'. $filename;
+            $filepath = PROJECT_DIR . '/uploads/pdf/'. $filename;
 
             if (file_exists($filepath)) {
                 $data = file_get_contents($filepath);
@@ -94,7 +94,7 @@ class OrderController extends AbstractController
             $userFile = str_replace(' ', '-', $userFile[3]).$extension; //'.pdf';
 
           // Change tag: serverPath
-            $filepath = PROJECT_DIR . 'uploads/'. $filename_original.'.pdf';
+            $filepath = PROJECT_DIR . 'uploads/pdf/'. $filename_original.'.pdf';
             if (file_exists($filepath)) {
                 header("Content-Description: File Transfer");
                 header("Content-Type: ".$format);

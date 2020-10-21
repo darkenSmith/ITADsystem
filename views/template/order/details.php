@@ -48,7 +48,7 @@
             <?php
             if ($order->files) {
                 foreach ($order->files as $dir => $file) {
-                    $path = '/uploads/' . $dir . '/';
+                    $path = '/uploads/pdf/' . $dir . '/';
                     echo '<tr>';
                     echo '<td>' . $order->detail->sales_order_number . '</td>';
                     echo '<td>' . substr($file, 12) . '</td>';
@@ -63,7 +63,7 @@
             }
             if ($order->newFiles) {
                 foreach ($order->newFiles as $file) {
-                    $path = '/uploads/';
+                    $path = '/uploads/pdf/';
                     echo '<tr>';
                     echo '<td>' . $order->detail->sales_order_number . '</td>';
                     echo '<td>' . $file->file_type . '</td>';
