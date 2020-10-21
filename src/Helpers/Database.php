@@ -34,6 +34,7 @@ class Database
             if ($database['driver'] === 'sqlsrv') {
                 $driver = sprintf('%s:%s', $database['driver'], 'Server');
                 $dbName = sprintf('%s=%s', 'Database', $database['dbname']);
+                $database['host'] .= ',' . $database['port'];
                 $port = '';
             } else {
                 $driver = sprintf('%s:%s', $database['driver'], 'host');
@@ -54,7 +55,10 @@ class Database
                 $database['user'],
                 $database['pass']
             );
+            self::$instance ->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            Logger::getInstance("Database.log")->info('connected', [$type]);
         } catch (\PDOException $e) {
+            Logger::getInstance("Database.log")->error($type, [$e->getMessage()]);
             echo "server connection issue please contact MIS";
             die;
         }
