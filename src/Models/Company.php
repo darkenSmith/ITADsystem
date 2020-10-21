@@ -143,7 +143,7 @@ class Company extends AbstractModel
             );
             //loop through, add to collection
             foreach ($files as $dir => $file) {
-                $path = PROJECT_DIR . 'uploads/' . $dir . '/';
+                $path = PROJECT_DIR . 'uploads/pdf/' . $dir . '/';
                 $filename = $collection->sales_order_number . '-' . $file;
                 $altFilename = $collection->sales_order_number . '-' . str_replace('-', ' ', $file);
                 if (file_exists($path . $filename)) {
