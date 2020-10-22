@@ -229,14 +229,14 @@ WHERE row_num > 1;";
                 $response = $sendgrid->send($email);
 
                 if ($response->statusCode() !== 202) {
+                    Logger::getInstance("Mailfailed.log")->warning('Body', [$response->body()]);
+
                     throw new \RuntimeException($response->body());
                 }
 
                 echo 'Message has been sent';
             } catch (\Exception $e) {
                 Logger::getInstance("Mailfailed.log")->warning('Mailfailed', [$e->getMessage()]);
-
-                $this->sendFailedMailToRecycling();
             }
 
             $sqlcheck = 'select Request_id from request where Request_id = ' . $_SESSION['rid'];
@@ -311,78 +311,6 @@ WHERE row_num > 1;";
         }
 
         return $sql_string;
-    }
-
-    public function sendFailedMailToRecycling()
-    {
-        Logger::getInstance("attachments.log")->debug('filestuff', $_SESSION['filestuff']);
-        $sql = "select pl.Product,  rd.QTY, Asset_req, Wipe, other1_name, other2_name, other3_name, sum(round(pl.typicalweight, 2) * qty) as estweight  from Request_test2  as rt
-join Req_Detail as rd on
-rd.req_id = rt.Request_id
-join productlist as pl with(nolock) on 
-pl.product_ID = rd.prod_id
-where Request_id =  " . $_SESSION['rid'] . "
-group by pl.Product,  rd.QTY, Asset_req, Wipe, other1_name, other2_name, other3_name";
-        $stmt = $this->sdb->prepare($sql);
-        $stmt->execute();
-        $d = $stmt->fetchall(\PDO::FETCH_ASSOC);
-
-        $table = '<table class="table">
-  <thead>
-  <tr>
-  <th>  Product </th>
-  <th>  Qty </th>
-  <th>  est. Weight </th>
-  </tr>
-  <thead>';
-
-        foreach ($d as $obj) {
-            $table .= '<tbody><tr>
-    <td>' . $obj['Product'] . ' </td>
-    <td>' . $obj['QTY'] . ' </td>
-    <td>' . $obj['estweight'] . ' </td>
-    </tr></tbody>';
-        }
-        $table .= '</table>';
-
-        $email = new \SendGrid\Mail\Mail();
-        $sendgridConfig = $this->emailConfig['sendgrid'];
-
-        try {
-            $email->setFrom($sendgridConfig['from']['ITADSystem'], "ITAD System");
-            $email->setSubject('New Stone ITAD Request');
-            $email->addTo($this->emailReceiver);
-
-            $content = '
-  <!DOCTYPE html>
-  <html>
-  <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<title>Collection Request </title>
-  </head>
-  <body>
-  
-  <p> Hello,<br/><br/>
-
-<strong>' . $_SESSION['custname'] . '</strong> has submitted a new request.<br/>
-RequestID : ' . $_SESSION['rid'] . '.
-
-' . $table . '
-</body>
-</html>
-  ';
-            $email->addContent("text/html", $content);
-            $sendgrid = new \SendGrid($sendgridConfig['api']['key']);
-            $response = $sendgrid->send($email);
-
-            if ($response->statusCode() !== 202) {
-                throw new \RuntimeException($response->body());
-            }
-
-            echo 'Message has been sent';
-        } catch (\Exception $e) {
-            Logger::getInstance("torecyclingemailerr.log")->warning($e->getMessage());
-        }
     }
 
     public function toRecycling()
