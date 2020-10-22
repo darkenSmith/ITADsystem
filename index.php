@@ -1,9 +1,8 @@
 <?php
 
-use App\Helpers\App;
-use App\Helpers\Config;
-
 session_start();
+
+use App\Helpers\App;
 
 define('PROJECT_DIR', __DIR__ . '/');
 define('VIEW_DIR', __DIR__ . '/views/');
