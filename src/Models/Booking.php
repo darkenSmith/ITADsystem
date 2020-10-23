@@ -127,10 +127,10 @@ class Booking extends AbstractModel
         $_SESSION['rid'] = $requestid;
 
         $sqlup = "insert into request(customer_name, customer_email, customer_phone,
-premise_code, premise_exempt, add1, add2, add3, town, postcode, contact_name, contact_tel, request_col_date, req_col_instrct, request_date_added, customer_contact, customer_contact_positon, bio_pass, SICcode, country, request_id, deleted, confirmed, done,  laststatus, GDPRconf, charge, area1, [Early Acess notes], Help_Onsite, [Parking Notes], lift, ground, steps, twoman, avoidtimes)
+premise_code, premise_exempt, add1, add2, add3, town, postcode, contact_name, contact_tel, request_col_date, req_col_instrct, request_date_added, customer_contact, customer_contact_positon, bio_pass, SICcode, country, request_id, deleted, confirmed, done,  laststatus, GDPRconf, charge, area1, [Early Acess notes], Help_Onsite, [Parking Notes], lift, ground, steps, twoman, avoidtimes, user_id)
 
 values('" . $cleanname . "', '" . $cleanemail . "', '" . $cust_tel . "', '" . $premisecode . "', '" . $is_exempt . "', '" . $cleanadd1 . "', '" . $cleanadd2 . "', '" . $cleanadd3 . "', '" . $cleantown . "', '" . $cleanpostcode . "', '" . $cleancontact . "',
-'" . $contact_tel . "', '" . $cleancoldatenote . "', '" . $cleancolinstruct . "', '" . $timestamp . "', '" . $cleanrequest . "', '" . $position . "','" . $biocl . "','" . $sic . "', '" . $country . "', " . $_SESSION['rid'] . ", '0', '0', '0', 'Request', '1', " . $charge . ", 'Empty', '" . $accessclean . "', '" . $onsiteclean . "', '" . $parkingclean . "', '" . $liftclean . "', '" . $groundclean . "', '" . $stepsclean . "', '" . $twomanclean . "', '" . $avoidclean . "');
+'" . $contact_tel . "', '" . $cleancoldatenote . "', '" . $cleancolinstruct . "', '" . $timestamp . "', '" . $cleanrequest . "', '" . $position . "','" . $biocl . "','" . $sic . "', '" . $country . "', " . $_SESSION['rid'] . ", '0', '0', '0', 'Request', '1', " . $charge . ", 'Empty', '" . $accessclean . "', '" . $onsiteclean . "', '" . $parkingclean . "', '" . $liftclean . "', '" . $groundclean . "', '" . $stepsclean . "', '" . $twomanclean . "', '" . $avoidclean . "', '".$_SESSION['user']['id']."');
 exec updatearea @rid = '" . $_SESSION['rid'] . "';";
 
         $log = date("Y/m/d") . "  " . $cleanname . " " . "\n\n" . $cleanemail . " " . "\n\n" . $cust_tel . " " . "\n\n" . "orginal ID:" . " " . $_SESSION['rid'] . "\r\n";
