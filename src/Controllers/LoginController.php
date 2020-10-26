@@ -44,11 +44,6 @@ class LoginController extends AbstractController
             echo 'Unable to change Password';
         }
     }
-    public function register()
-    {
-        $this->template->view('login/register', $this->getCommonData());
-    }
-
 
     // Calls: models/user.php -> sendReminder()
     public function forgot()
