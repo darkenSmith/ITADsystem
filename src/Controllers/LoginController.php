@@ -44,6 +44,11 @@ class LoginController extends AbstractController
             echo 'Unable to change Password';
         }
     }
+    public function register()
+    {
+        $this->template->view('login/register', $this->getCommonData());
+    }
+
 
     // Calls: models/user.php -> sendReminder()
     public function forgot()
@@ -130,5 +135,21 @@ class LoginController extends AbstractController
         } else {
             header('Location: /admin/users');
         }
+    }
+
+    private function getCommonData()
+    {
+        $data = new User();
+        $data->getRoles();
+        $roles = $data->roles;
+
+        $data->getCustomers();
+        $customers = $data->customers;
+
+        return [
+            'customers' => $customers,
+            'data' => $data,
+            'roles' => $roles,
+        ];
     }
 }
