@@ -8,12 +8,6 @@
 
 
         jQuery('#next').on('click', function () {
-             $('#part2').show();
-
-            $('#part1').hide();
-         
-        });
-        jQuery('#reg').on('click', function () {
             password = jQuery('#password').val();
             username = jQuery('#username').val();
             email = jQuery('#username').val();
@@ -23,6 +17,21 @@
             firsname = jQuery('#firsname').val();
             lastname = jQuery('#lastname').val();
             telephone = jQuery('#lastname').val();
+
+            if(companyname.length < 3 || firsname.length < 3 || lastname.length < 3 || telephone.length < 11 || telephone.length < 3){
+
+                alert("please fill in form correctly");
+            }else{
+                             $('#part2').show();
+
+            $('#part1').hide();
+            }
+
+
+         
+        });
+        jQuery('#reg').on('click', function () {
+  
             redirect = "<?php echo $redirect; ?>";
 
             if (username.length < 3) {
@@ -87,14 +96,23 @@
   <div class="form-group">
     <label for="companyname">Company Name</label>
     <input type="text" class="form-control" id="companyname" placeholder="Company Name">
-    <label for="companyname">First Name</label>
+</div>
+<div class="form-group">
+    <label for="firstname">First Name</label>
     <input type="text" class="form-control" id="firstname" placeholder="First Name">
-    <label for="companyname">Last Name</label>
+    </div>
+    <div class="form-group">
+    <label for="lastname">Last Name</label>
     <input type="text" class="form-control" id="lastname" placeholder="Last Name">
-    <label for="companyname">Telephone</label>
+</div>
+<div class="form-group">
+    <label for="telephone">Telephone</label>
     <input type="text" class="form-control" id="telephone" placeholder="Telephone">
-    <label for="companyname">Position</label>
+</div>
+<div class="form-group">
+    <label for="Position">Position</label>
     <input type="text" class="form-control" id="Position" placeholder="Position">
+    <div class="form-group">
   </div>
   <div class="form-group">
     <label for="comptype">My company is part of the...</label>
@@ -109,7 +127,7 @@
   </div> 
   <a  id='next' class='btn btn-success'>Next </a>
   </div>
- 
+  </div>
 
   <div id='part2'>
   <div class="form-group">
