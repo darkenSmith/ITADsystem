@@ -21,7 +21,7 @@ class LoginController extends AbstractController
         }
 
         $user = new User();
-        $user->login();
+        echo $user->login();
     }
 
     // Calls: models/user.php -> update()

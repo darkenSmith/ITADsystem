@@ -22,9 +22,9 @@
                     data: "username=" + username + "&password=" + password + "&redirect=" + redirect,
                     success: function (data) {
                         if (data == 1) {
-                            document.location = '<?php echo $redirect; ?>'
+                            document.location = '<?php echo $redirect; ?>';
                         } else {
-                            alert(data)
+                            alert(data);
                         }
                     }
                 });
