@@ -39,19 +39,20 @@ class Register extends AbstractModel
                 //     }
                 // }
 
- 
+                    
 
                 // Create record for user in recyc_users return the new user id
                 $sql = "INSERT INTO recyc_users (username, firstname,lastname, email, password, active, role_id, CompanyNUM, telephone, number_type, position, `email_preferences`, `post_preferences`, `phone_preferences`) VALUES (:username,:firstname, :lastname,:email, 1, 3, :compnum, :telephone, :number_type, :number_type, :position, 'N', 'N', 'N')";
                 $result = $this->rdb->prepare($sql);
-                $result->execute(array(':username' => $_POST['username'], 
-                ':firstname' => $_POST['firstname'], 
-                ':lastname' => $_POST['lastname'],
-                ':email' => $_POST['email'],
-                ':compnum' => $_POST['compnum'],
-                ':telephone' => $_POST['telephone'],
-                ':number_type' => $_POST['number_type'],
-                ':position' => $_POST['position'],
+                $result->execute(array(':username' => filter_var($_POST['username'], FILTER_SANITIZE_STRING), 
+                ':firstname' => filter_var($_POST['firstname'], FILTER_SANITIZE_STRING), 
+                ':lastname' => filter_var($_POST['lastname'], FILTER_SANITIZE_STRING),
+                ':email' => filter_var($_POST['email'], FILTER_SANITIZE_STRING),
+                ':compnum' => filter_var($_POST['compnum'], FILTER_SANITIZE_STRING),
+                ':telephone' => filter_var($_POST['telephone'], FILTER_SANITIZE_STRING),
+                ':number_type' => filter_var($_POST['number_type'], FILTER_SANITIZE_STRING),
+                ':position' => filter_var($_POST['position'], FILTER_SANITIZE_STRING),
+                ':password' => filter_var(md5($_POST['password']), FILTER_SANITIZE_STRING)
             ));
 
                 ///add to company list
