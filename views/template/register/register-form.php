@@ -88,10 +88,9 @@
 
 <h2>REGISTER FORM</h2>
 <div class="row">
-    <form class="form-signin">
+    <form class="form-register">
         <h2 class="form-signin-heading">Register Here</h2>
-     
-        <form name='registration' method="">
+    
     <div id='part1'>
   <div class="form-group">
     <label for="companyname">Company Name</label>
