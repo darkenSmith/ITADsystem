@@ -88,5 +88,6 @@
         <button class="btn btn-lg btn-primary btn-block" id="login">Sign in</button>
         <a class="btn btn-sm btn-link" id="forgot" data-toggle="modal" data-target="#forgotModal">Forgotten / Change
             Password</a>
+        <a href="/register" class="btn btn-sm btn-link pull-right" >Register</a>
     </form>
 </div>
