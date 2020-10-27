@@ -88,7 +88,7 @@ class LoginController extends AbstractController
             if (isset($_GET['controller']) && isset($_GET['action'])) {
                 $redirect = '/' . $_GET['controller'] . '/' . $_GET['action'];
             } else {
-                $redirect = false;
+                $redirect = '/';
             }
 
 
