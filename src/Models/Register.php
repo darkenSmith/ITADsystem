@@ -58,9 +58,11 @@ class Register extends AbstractModel
                 $this->user->id = $this->rdb->lastInsertId();
 
                 ///add to company list
-                $sql = 'INSERT INTO `recyc_company_list` ( `company_name`, `portal_requirement`, `assigned_to_bdm`, `cod_required`, `amr_required`, `rebate_required`, `remarketingrep_required`, `blancco_required`, `manual_customer`, `reference_code`, `reference_source`) VALUES(:companyname, 0, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL)';
-                $result = $this->rdb->prepare($sql);
-                $result->execute(array(':companyname' => $_POST['companyname']));
+                if (!$this->isCompanyExist(filter_var($_POST['companyname'], FILTER_SANITIZE_STRING))) {
+                    $sql = 'INSERT INTO `recyc_company_list` ( `company_name`, `portal_requirement`, `assigned_to_bdm`, `cod_required`, `amr_required`, `rebate_required`, `remarketingrep_required`, `blancco_required`, `manual_customer`, `reference_code`, `reference_source`) VALUES(:companyname, 0, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL)';
+                    $result = $this->rdb->prepare($sql);
+                    $result->execute(array(':companyname' => filter_var($_POST['companyname'], FILTER_SANITIZE_STRING)));
+                }
 
                 // Check if a user id was returned by the insert
                 if ($this->user->id) {
@@ -137,6 +139,20 @@ class Register extends AbstractModel
         $result->execute($values);
     }
 
+    public function isCompanyExist($companyName)
+    {
+        $sql = 'SELECT id FROM `recyc_company_list` WHERE company_name = :companyname';
+        $result = $this->rdb->prepare($sql);
+        $result->execute(array(':companyname' => $companyName));
+        $company = $result->fetch(\PDO::FETCH_OBJ);
+
+        if (!empty($company['id'])) {
+            return true;
+        }
+
+        return false;
+    }
+
     private function passValidation($pass)
     {
         if (strlen($pass) > 20 ||
@@ -145,5 +161,4 @@ class Register extends AbstractModel
         }
         return true;
     }
-
 }
