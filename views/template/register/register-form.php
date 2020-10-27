@@ -1,5 +1,7 @@
 <script type="text/javascript">
     jQuery(document).ready(function () {
+        
+
         $('#part2').hide();
         let password, username, email, companyname, compnum, comptype, firstname, lastname, telephone, position;
 
@@ -37,13 +39,20 @@
             username = jQuery('#username').val();
             let redirect = "<?php echo $redirect; ?>";
 
+            let passwordcheck = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
+            let passwordcheck2 = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+
             if (username.length < 3) {
                 alert('Please enter your username');
                 jQuery('#username').focus();
-            } else if (password.length < 3) {
-                alert('Please enter your password');
+            }else if (passwordcheck.test(password)) {
+                alert('most have Minimum eight characters, at least one letter and one number');
                 jQuery('#password').focus();
-            } else if (lastname.length < 3) {
+            }else if (passwordcheck2.test(password)) {
+                alert('most have one special characters');
+                jQuery('#password').focus();
+            }else if (lastname.length < 3) {
                 alert('Please enter your password');
                 jQuery('#password').focus();
             } else if (firstname.length < 3) {
