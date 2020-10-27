@@ -39,20 +39,17 @@
             username = jQuery('#username').val();
             let redirect = "<?php echo $redirect; ?>";
 
-            let passwordcheck = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
-            let passwordcheck2 = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+            let passwordcheck = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}/);
+            let passwordcheck2 = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]$/;
 
 
             if (username.length < 3) {
                 alert('Please enter your username');
                 jQuery('#username').focus();
-            }else if (passwordcheck.test(password)) {
-                alert('most have Minimum eight characters, at least one letter and one number');
+            }else if (!passwordcheck.test(password)) {
+                alert('Minimum eight characters, at least one letter, one number and one special character:');
                 jQuery('#password').focus();
-            }else if (passwordcheck2.test(password)) {
-                alert('most have one special characters');
-                jQuery('#password').focus();
-            }else if (lastname.length < 3) {
+            } else if (lastname.length < 3) {
                 alert('Please enter your password');
                 jQuery('#password').focus();
             } else if (firstname.length < 3) {
