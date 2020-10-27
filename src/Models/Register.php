@@ -11,6 +11,7 @@ use App\Helpers\Logger;
 class Register extends AbstractModel
 {
     public $user;
+    public $exsitcompany;
 
     /**
      * Register constructor.
@@ -70,6 +71,14 @@ class Register extends AbstractModel
                     $result->execute(array(':userid' => $this->user->id, ':companyid' => $companyID));
 
 
+
+                }else{
+
+                    
+                    $sql = 'INSERT INTO `recyc_customer_links_to_company` (user_id, company_id, `default`)
+                     VALUES(:userid, :companyid, 1)';
+                    $result = $this->rdb->prepare($sql);
+                    $result->execute(array(':userid' => $this->user->id, ':companyid' => $this->exsitcompany));
 
                 }
 
@@ -154,6 +163,7 @@ class Register extends AbstractModel
         $result = $this->rdb->prepare($sql);
         $result->execute(array(':companyname' => $companyName));
         $company = $result->fetch(\PDO::FETCH_OBJ);
+        $this->exsitcompany = $company['id'];
 
         if (!empty($company['id'])) {
             return true;
