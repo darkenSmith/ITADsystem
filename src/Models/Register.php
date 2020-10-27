@@ -38,8 +38,8 @@ class Register extends AbstractModel
             }
 
             if (!$this->user) {
-                $sql = "INSERT INTO recyc_users (username, firstname,lastname, email, password, active, role_id, CompanyNUM, telephone, number_type, position, `email_preferences`, `post_preferences`, `phone_preferences`) 
-                VALUES (:username,:firstname, :lastname,:email, :password, 1, 3, :compnum, :telephone, :number_type, :position, 'N', 'N', 'N')";
+                $sql = "INSERT INTO recyc_users (username, firstname,lastname, email, password, active, role_id, CompanyNUM, telephone, number_type, position, `email_preferences`, `post_preferences`, `phone_preferences`, `approved`) 
+                VALUES (:username,:firstname, :lastname,:email, :password, 1, 3, :compnum, :telephone, :number_type, :position, 'N', 'N', 'N', 'Y')";
                 $result = $this->rdb->prepare($sql);
                 $result->execute(
                     [
@@ -62,6 +62,15 @@ class Register extends AbstractModel
                     $sql = 'INSERT INTO `recyc_company_list` ( `company_name`, `portal_requirement`, `assigned_to_bdm`, `cod_required`, `amr_required`, `rebate_required`, `remarketingrep_required`, `blancco_required`, `manual_customer`, `reference_code`, `reference_source`) VALUES(:companyname, 0, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL)';
                     $result = $this->rdb->prepare($sql);
                     $result->execute(array(':companyname' => filter_var($_POST['companyname'], FILTER_SANITIZE_STRING)));
+                    $companyID = $this->rdb->lastInsertId();
+
+                    $sql = 'INSERT INTO `recyc_customer_links_to_company` (user_id, company_id, `default`)
+                     VALUES(:userid, :companyid, 1)';
+                    $result = $this->rdb->prepare($sql);
+                    $result->execute(array(':userid' => $this->user->id, ':companyid' => $companyID));
+
+
+
                 }
 
                 // Check if a user id was returned by the insert
