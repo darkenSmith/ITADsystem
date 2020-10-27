@@ -79,15 +79,12 @@
                         position : position
                     },
                     success: function (data) {
-                        console.log(data);
-                        alert(data);
+                        //console.log(data);
                         if (data.success) {
-                            alert(data);
                             $('#part1').hide();
                             $('#errorContainer').html(data.message);
-                            console.log(data.message);
+                            //console.log(data.message);
                             setTimeout(function(){ window.location = redirect; }, 2000);
-                            
                         } else {
                             $('#errorContainer').html(data.message);
                         }

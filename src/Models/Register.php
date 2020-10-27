@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Helpers\Logger;
 use Exception;
 
-
 /**
  * Class Register
  * @package App\Models
@@ -25,17 +24,19 @@ class Register extends AbstractModel
 
     public function register()
     {
-        // Logger::getInstance("Register1.log")->info(
-        //     'failedlink',
-        //     ['line' => __LINE__]
-        // );
-        // exit;
         try {
             $email = filter_var(stripslashes(strtolower($_POST['email'])), FILTER_SANITIZE_EMAIL);
 
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $this->loadByEmail($email);
             } else {
+                Logger::getInstance("Register.log")->info(
+                    'email not valid',
+                    [
+                        'line' => __LINE__,
+                        'email' => $email
+                    ]
+                );
                 $message = '
 				<div class="alert alert-danger fade-in" id="reset-container" >
 					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -47,7 +48,7 @@ class Register extends AbstractModel
 
             if (!$this->user) {
                 $sql = "INSERT INTO recyc_users (username, firstname,lastname, email, password, active, role_id, CompanyNUM, telephone, number_type, position, `email_preferences`, `post_preferences`, `phone_preferences`, `approved`) 
-                VALUES (:username,:firstname, :lastname,:email, :password, 1, 3, :compnum, :telephone, :number_type, :position, 'N', 'N', 'N', 'Y')";
+                VALUES (:username,:firstname, :lastname,:email, :password, 1, 3, :compnum, :telephone, :number_type, :position, 'N', 'N', 'N', 'N')";
                 $result = $this->rdb->prepare($sql);
                 $result->execute(
                     [
@@ -65,59 +66,79 @@ class Register extends AbstractModel
                 $this->user = new \stdClass();
                 $this->user->id = $this->rdb->lastInsertId();
 
+                $company_name = filter_var($_POST['companyname'], FILTER_SANITIZE_STRING);
                 ///add to company list
-                if (!$this->isCompanyExist(filter_var($_POST['companyname'], FILTER_SANITIZE_STRING))) {
-                    $sql = 'INSERT INTO `recyc_company_list` ( `company_name`, `portal_requirement`, `assigned_to_bdm`, `cod_required`, `amr_required`, `rebate_required`, `remarketingrep_required`, `blancco_required`, `manual_customer`, `reference_code`, `reference_source`) VALUES(:companyname, 0, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL)';
-                    $result = $this->rdb->prepare($sql);
-                    $result->execute(array(':companyname' => filter_var($_POST['companyname'], FILTER_SANITIZE_STRING)));
-                    $companyID = $this->rdb->lastInsertId();
+                if (!$this->isCompanyExist($company_name)) {
+                    try {
+                        $sql = 'INSERT INTO `recyc_company_list` ( `company_name`, `portal_requirement`, `assigned_to_bdm`, `cod_required`, `amr_required`, `rebate_required`, `remarketingrep_required`, `blancco_required`, `manual_customer`, `reference_code`, `reference_source`)
+                                VALUES(:companyname, 1, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL)';
+                        $result = $this->rdb->prepare($sql);
+                        $result->execute([
+                            ':companyname' => $company_name
+                        ]);
+                        $companyID = $this->rdb->lastInsertId();
 
-                    $sql = 'INSERT INTO `recyc_customer_links_to_company` (user_id, company_id, `default`)
+                        $sql = 'INSERT INTO `recyc_customer_links_to_company` (user_id, company_id, `default`)
+                         VALUES(:userid, :companyid, 1)';
+
+                        $result = $this->rdb->prepare($sql);
+                        $result->execute([
+                            ':userid' => $this->user->id,
+                            ':companyid' => $companyID
+                        ]);
+
+                        Logger::getInstance("Register.log")->info(
+                            'inserts',
+                            [
+                                'line' => __LINE__,
+                                'user' => $this->user->id,
+                                'compid' => $companyID
+                            ]
+                        );
+                    } catch (Exception $e) {
+                        Logger::getInstance("Register.log")->error(
+                            'inserts',
+                            [
+                                'line' => $e->getLine(),
+                                'line2' => __LINE__,
+                                'this->user->id' => $this->user->id,
+                                'error' => $e->getMessage()
+                            ]
+                        );
+                    }
+                } else {
+                    try {
+                        $sql = 'INSERT INTO `recyc_customer_links_to_company` (user_id, company_id, `default`)
                      VALUES(:userid, :companyid, 1)';
-                    $result = $this->rdb->prepare($sql);
-                    $result->execute(array(':userid' => $this->user->id, ':companyid' => $companyID));
+                        $result = $this->rdb->prepare($sql);
+                        $result->execute([':userid' => $this->user->id, ':companyid' => $this->exsitcompany]);
 
-                    Logger::getInstance("Register1.log")->info(
-                        'failedlink',
-                        ['line' => __LINE__,
-                        'user' => $this->user->id,
-                        'compid' => $companyID
-                        
-                        ]
-                    );
+                        Logger::getInstance("Register.log")->info(
+                            'insert',
+                            ['line' => __LINE__,
+                                'user' => $this->user->id,
+                                'compid' => $this->exsitcompany
 
-                }else{
-
-                    
-                    $sql = 'INSERT INTO `recyc_customer_links_to_company` (user_id, company_id, `default`)
-                     VALUES(:userid, :companyid, 1)';
-                      try{
-                          
-                    Logger::getInstance("Register1.log")->info(
-                        'failedlink',
-                        ['line' => __LINE__,
-                        'user' => $this->user->id,
-                        'compid' => $this->exsitcompany
-                        
-                        ]
-                    );
-                    $result = $this->rdb->prepare($sql);
-                    $result->execute(array(':userid' => $this->user->id, ':companyid' => $this->exsitcompany));
-                    }catch(Exception $e){
-
-                        Logger::getInstance("Register1.log")->error(
+                            ]
+                        );
+                    } catch (Exception $e) {
+                        Logger::getInstance("Register.log")->error(
                             'failedlink',
                             ['line' => $e->getLine(), 'error' => $e->getMessage()]
                         );
-
                     }
-               
-
                 }
 
                 // Check if a user id was returned by the insert
                 if ($this->user->id) {
                     $this->generateToken();
+                    Logger::getInstance("Register.log")->info(
+                        'success',
+                        [
+                            'line' => __LINE__,
+                            'this->user->id' => $this->user->id
+                        ]
+                    );
                     $message = '
                     <div class="alert alert-success fade-in" id="reset-container" >
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -127,6 +148,13 @@ class Register extends AbstractModel
                     ';
                     return ['success' => true, 'message' => $message];
                 } else {
+                    Logger::getInstance("Register.log")->warning(
+                        'unable to save user',
+                        [
+                            'line' => __LINE__,
+                            'this->user->id' => $this->user->id
+                        ]
+                    );
                     $message = '
 					<div class="alert alert-danger fade-in" id="reset-container" >
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -137,6 +165,13 @@ class Register extends AbstractModel
                     return ['success' => false, 'message' => $message];
                 }
             } else {
+                Logger::getInstance("Register.log")->warning(
+                    'user already exist',
+                    [
+                        'line' => __LINE__,
+                        'email' => $email
+                    ]
+                );
                 $message = '
 				<div class="alert alert-danger fade-in" id="reset-container" >
 					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -196,10 +231,10 @@ class Register extends AbstractModel
         $result = $this->rdb->prepare($sql);
         $result->execute(array(':companyname' => $companyName));
         $company = $result->fetch(\PDO::FETCH_OBJ);
-        
 
-        if (!empty($company['id'])) {
-            $this->exsitcompany = $company['id'];
+
+        if (!empty($company->id)) {
+            $this->exsitcompany = $company->id;
             return true;
         }
 
