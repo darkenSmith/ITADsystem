@@ -71,16 +71,16 @@ class User extends AbstractModel
 
             if ($result) {
                 if (empty($result['username'])) {
-                    return 'alert("User does not exist");';
+                    return 'alert("Please check that your password and username is correct.");';
                 } elseif ($result['active'] == 0) {
                     return 'alert("Your account is not active.");';
                 }
             } else {
-                return 'alert("User does not exist");';
+                return 'alert("Please check that your password and username is correct.");';
             }
         }
 
-        return 'alert("User does not exist.");';
+        return 'alert("Please check that your password and username is correct.");';
     }
 
     // Called by: addUser()
@@ -118,16 +118,20 @@ class User extends AbstractModel
 
             if ($result) {
                 if (empty($result['username'])) {
-                    $alert = "User does not exist";
+                    //$alert = "User does not exist";
+                    $alert = "Please check that your password and username is correct.";
                 } elseif ($result['active'] == 0) {
-                    $alert = 'Your account is not active.';
+                    //$alert = 'Your account is not active.';
+                    $alert = "Please check that your password and username is correct.";
                 } elseif ($result['password'] != $password) {
-                    $alert = 'Incorrect Password';
+                    //$alert = 'Incorrect Password';
+                    $alert = "Please check that your password and username is correct.";
                 } else {
-                    $alert = 'Incorrect Password';
+                    //$alert = 'Incorrect Password';
+                    $alert = "Please check that your password and username is correct.";
                 }
             } else {
-                $alert = 'User does not exist';
+                $alert = "Please check that your password and username is correct.";
             }
         }
         echo $alert;
