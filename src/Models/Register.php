@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Helpers\Logger;
+use Exception;
+
 
 /**
  * Class Register
@@ -23,6 +25,11 @@ class Register extends AbstractModel
 
     public function register()
     {
+        // Logger::getInstance("Register1.log")->info(
+        //     'failedlink',
+        //     ['line' => __LINE__]
+        // );
+        // exit;
         try {
             $email = filter_var(stripslashes(strtolower($_POST['email'])), FILTER_SANITIZE_EMAIL);
 
@@ -70,15 +77,41 @@ class Register extends AbstractModel
                     $result = $this->rdb->prepare($sql);
                     $result->execute(array(':userid' => $this->user->id, ':companyid' => $companyID));
 
-
+                    Logger::getInstance("Register1.log")->info(
+                        'failedlink',
+                        ['line' => __LINE__,
+                        'user' => $this->user->id,
+                        'compid' => $companyID
+                        
+                        ]
+                    );
 
                 }else{
 
                     
                     $sql = 'INSERT INTO `recyc_customer_links_to_company` (user_id, company_id, `default`)
                      VALUES(:userid, :companyid, 1)';
+                      try{
+                          
+                    Logger::getInstance("Register1.log")->info(
+                        'failedlink',
+                        ['line' => __LINE__,
+                        'user' => $this->user->id,
+                        'compid' => $this->exsitcompany
+                        
+                        ]
+                    );
                     $result = $this->rdb->prepare($sql);
                     $result->execute(array(':userid' => $this->user->id, ':companyid' => $this->exsitcompany));
+                    }catch(Exception $e){
+
+                        Logger::getInstance("Register1.log")->error(
+                            'failedlink',
+                            ['line' => $e->getLine(), 'error' => $e->getMessage()]
+                        );
+
+                    }
+               
 
                 }
 
@@ -163,9 +196,10 @@ class Register extends AbstractModel
         $result = $this->rdb->prepare($sql);
         $result->execute(array(':companyname' => $companyName));
         $company = $result->fetch(\PDO::FETCH_OBJ);
-        $this->exsitcompany = $company['id'];
+        
 
         if (!empty($company['id'])) {
+            $this->exsitcompany = $company['id'];
             return true;
         }
 
