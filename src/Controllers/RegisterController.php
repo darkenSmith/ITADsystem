@@ -15,7 +15,7 @@ class RegisterController extends AbstractController
             header('Location: /');
         } else {
             if (isset($_GET['controller']) && isset($_GET['action'])) {
-                $redirect = '/' . $_GET['controller'] . '/' . $_GET['action'];
+                $redirect = '/login';
             } else {
                 $redirect = false;
             }

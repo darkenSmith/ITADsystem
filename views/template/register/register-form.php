@@ -35,7 +35,7 @@
             e.preventDefault();
             password = jQuery('#password').val();
             username = jQuery('#username').val();
-            redirect = "<?php echo $redirect; ?>";
+            let redirect = "<?php echo $redirect; ?>";
 
             if (username.length < 3) {
                 alert('Please enter your username');
@@ -59,6 +59,7 @@
                 jQuery.ajax({
                     url: "/register/register",
                     type: "POST",
+                    dataType : "json",
                     data: {
                         username: username,
                         firstname: firstname,
@@ -73,9 +74,14 @@
                     },
                     success: function (data) {
                         console.log(data);
+                        alert(data);
                         if (data.success) {
+                            alert(data);
+                            $('#part1').hide();
+                            $('#errorContainer').html(data.message);
                             console.log(data.message);
-                            document.location = redirect;
+                            setTimeout(function(){ window.location = redirect; }, 2000);
+                            
                         } else {
                             $('#errorContainer').html(data.message);
                         }

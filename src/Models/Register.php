@@ -26,7 +26,8 @@ class Register extends AbstractModel
             $this->loadByEmail($email);
 
             if (!$this->user) {
-                $sql = "INSERT INTO recyc_users (username, firstname,lastname, email, password, active, role_id, CompanyNUM, telephone, number_type, position, `email_preferences`, `post_preferences`, `phone_preferences`) VALUES (:username,:firstname, :lastname,:email, 1, 3, :compnum, :telephone, :number_type, :number_type, :position, 'N', 'N', 'N')";
+                $sql = "INSERT INTO recyc_users (username, firstname,lastname, email, password, active, role_id, CompanyNUM, telephone, number_type, position, `email_preferences`, `post_preferences`, `phone_preferences`) 
+                VALUES (:username,:firstname, :lastname,:email, :password, 1, 3, :compnum, :telephone, :number_type, :position, 'N', 'N', 'N')";
                 $result = $this->rdb->prepare($sql);
                 $result->execute(
                     [
@@ -36,24 +37,33 @@ class Register extends AbstractModel
                         ':email' => filter_var($_POST['email'], FILTER_SANITIZE_STRING),
                         ':compnum' => filter_var($_POST['compnum'], FILTER_SANITIZE_STRING),
                         ':telephone' => filter_var($_POST['telephone'], FILTER_SANITIZE_STRING),
-                        ':number_type' => filter_var($_POST['number_type'], FILTER_SANITIZE_STRING),
+                        ':number_type' => filter_var($_POST['comptype'], FILTER_SANITIZE_STRING),
                         ':position' => filter_var($_POST['position'], FILTER_SANITIZE_STRING),
-                        ':password' => filter_var(md5($_POST['password']), FILTER_SANITIZE_STRING)
+                        ':password' => md5($_POST['password'])
                     ]
                 );
-
+                $this->user = new \stdClass();
+                $this->user->id = $this->rdb->lastInsertId();
                 ///add to company list
                 $sql = 'INSERT INTO `recyc_company_list` ( `company_name`, `portal_requirement`, `assigned_to_bdm`, `cod_required`, `amr_required`, `rebate_required`, `remarketingrep_required`, `blancco_required`, `manual_customer`, `reference_code`, `reference_source`) VALUES(:companyname, 0, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL)';
                 $result = $this->rdb->prepare($sql);
                 $result->execute(array(':companyname' => $_POST['companyname']));
 
                 // Get user id just created and init $this->user to stop empty object warning message
-                $this->user = new \stdClass();
-                $this->user->id = $this->rdb->lastInsertId();
+
 
                 // Check if a user id was returned by the insert
                 if ($this->user->id) {
                     $this->generateToken();
+                    $message = '
+                    <div class="alert alert-success fade-in" id="reset-container" >
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h4>Success</h4>
+                        <p>thank you for registering.</p>
+                    </div>
+                    ';
+                    return ['success' => true,  'message' => $message];
+
                 } else {
                     $message = '
 					<div class="alert alert-danger fade-in" id="reset-container" >
