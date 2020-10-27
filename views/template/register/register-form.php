@@ -82,6 +82,7 @@
                         //console.log(data);
                         if (data.success) {
                             $('#part1').hide();
+                            $('#part2').hide();
                             $('#errorContainer').html(data.message);
                             //console.log(data.message);
                             setTimeout(function(){ window.location = redirect; }, 2000);

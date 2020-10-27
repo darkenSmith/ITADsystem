@@ -66,6 +66,7 @@ class Register extends AbstractModel
                 $this->user = new \stdClass();
                 $this->user->id = $this->rdb->lastInsertId();
 
+
                 $company_name = filter_var($_POST['companyname'], FILTER_SANITIZE_STRING);
                 ///add to company list
                 if (!$this->isCompanyExist($company_name)) {
@@ -80,12 +81,22 @@ class Register extends AbstractModel
 
                         $sql = 'INSERT INTO `recyc_customer_links_to_company` (user_id, company_id, `default`)
                          VALUES(:userid, :companyid, 1)';
-
                         $result = $this->rdb->prepare($sql);
                         $result->execute([
                             ':userid' => $this->user->id,
                             ':companyid' => $companyID
                         ]);
+
+                        $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP) VALUES (:recyc,:greenoak,:company,:cmp)";
+                        $result = $this->rdb->prepare($sql);
+                        $result->execute(
+                            [
+                                ':recyc' => $companyID,
+                                ':greenoak' => 'AWAITING UPDATE',
+                                ':company' => $company_name,
+                                ':cmp' => null
+                            ]
+                        );
 
                         Logger::getInstance("Register.log")->info(
                             'inserts',
