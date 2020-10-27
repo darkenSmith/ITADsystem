@@ -8,12 +8,13 @@
             companyname = jQuery('#companyname').val();
             compnum = jQuery('#compnum').val();
             comptype = jQuery('#comptype option:selected').val();
-            firsname = jQuery('#firsname').val();
+            firsname = jQuery('#firstname').val();
             lastname = jQuery('#lastname').val();
             telephone = jQuery('#lastname').val();
+            position = jQuery('#Position').val();
 
             if (companyname.length < 3 || firsname.length < 3 ||
-                lastname.length < 3 || telephone.length < 11 || telephone.length < 3) {
+                lastname.length < 3) {
                 alert("please fill in form correctly");
             } else {
                 $('#part2').show();
@@ -22,8 +23,21 @@
             }
         });
         jQuery('#reg').on('click', function () {
+
+                //         div.html($('input').val());
+                // div.contents().filter(function(){
+                //     return this.nodeType !== 3;
+                // }).remove();
+                // $('input').val(div.html());
+                        
             redirect = "<?php echo $redirect; ?>";
-            if (username.length < 3) {
+
+            // var usernametest = new RegExp('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$');
+
+            // if (usernametest.test(email)) {
+                
+            // }
+             if (username.length < 3) {
                 alert('Please enter your username');
                 jQuery('#username').focus();
             } else if (password.length < 3) {
@@ -41,6 +55,9 @@
             } else if (companyname.length < 3) {
                 alert('Please enter your company name');
                 jQuery('#password').focus();
+            }  else if (telephone.length < 3 || telephone.length > 11) {
+                alert('Please enter your company name');
+                jQuery('#password').focus();
             } else {
                 jQuery.ajax({
                     url: "/register/register",
@@ -54,7 +71,8 @@
                         password: password,
                         compnum: compnum,
                         telephone: telephone,
-                        comptype: comptype
+                        comptype: comptype,
+                        position : position
                     },
                     success: function (data) {
                         console.log(data);
