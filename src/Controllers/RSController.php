@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\Conf\Confirm;
 use App\Models\User;
 
 class RSController extends AbstractController
@@ -24,5 +25,14 @@ class RSController extends AbstractController
             'data' => $data,
             'roles' => $roles,
         ];
+    }
+
+    public function updateConf()
+    {
+        if (!empty($_POST['req'])) {
+            echo (new Confirm())->confirmList($_POST['req']);
+        } else {
+            echo 0;
+        }
     }
 }
