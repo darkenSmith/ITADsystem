@@ -56,7 +56,7 @@ class Register extends AbstractModel
                         ':firstname' => filter_var($_POST['firstname'], FILTER_SANITIZE_STRING),
                         ':lastname' => filter_var($_POST['lastname'], FILTER_SANITIZE_STRING),
                         ':email' => $email,
-                        ':compnum' => filter_var($_POST['compnum'], FILTER_SANITIZE_STRING),
+                        ':compnum' => $this->getFilteredCompanyNumber($_POST['compnum']),
                         ':telephone' => filter_var($_POST['telephone'], FILTER_SANITIZE_STRING),
                         ':number_type' => filter_var($_POST['comptype'], FILTER_SANITIZE_STRING),
                         ':position' => filter_var($_POST['position'], FILTER_SANITIZE_STRING),
@@ -222,20 +222,6 @@ class Register extends AbstractModel
         }
     }
 
-    public function generateToken()
-    {
-        $length = 32;
-        $this->token = bin2hex(random_bytes($length));
-        $expires = new \DateTime();
-        $expires->modify('+2 days');
-        $this->expiry = $expires->format('Y-m-d H:i:s');
-
-        $sql = 'UPDATE recyc_users SET token = :token, token_expires = :expiry WHERE id = :id';
-        $values = array(':token' => $this->token, ':expiry' => $this->expiry, ':id' => $this->user->id);
-        $result = $this->rdb->prepare($sql);
-        $result->execute($values);
-    }
-
     public function isCompanyExist($companyName)
     {
         $sql = 'SELECT id FROM `recyc_company_list` WHERE company_name = :companyname';
@@ -250,6 +236,34 @@ class Register extends AbstractModel
         }
 
         return false;
+    }
+
+    public function generateToken()
+    {
+        $length = 32;
+        $this->token = bin2hex(random_bytes($length));
+        $expires = new \DateTime();
+        $expires->modify('+2 days');
+        $this->expiry = $expires->format('Y-m-d H:i:s');
+
+        $sql = 'UPDATE recyc_users SET token = :token, token_expires = :expiry WHERE id = :id';
+        $values = array(':token' => $this->token, ':expiry' => $this->expiry, ':id' => $this->user->id);
+        $result = $this->rdb->prepare($sql);
+        $result->execute($values);
+    }
+
+    private function getFilteredCompanyNumber($companyNumber)
+    {
+        $companyNumber = preg_replace(
+            '/\s+/',
+            '',
+            filter_var(
+                $companyNumber,
+                FILTER_SANITIZE_STRING
+            )
+        );
+
+        return preg_replace('/[^A-Za-z0-9\-]/', '', $companyNumber);
     }
 
     private function passValidation($pass)

@@ -20,6 +20,7 @@
 
                 if (
                     (undefined !== companyname && companyname.length < 3) ||
+                    (undefined !== compnum && compnum.length < 6 && compnum.length > 9) ||
                     (undefined !== firstname && firstname.length < 3) ||
                     (undefined !== lastname && lastname.length < 3) ||
                     (undefined !== telephone && telephone.length < 11)
@@ -103,27 +104,27 @@
         <div id='part1'>
             <div class="form-group">
                 <label for="companyname">Company Name</label>
-                <input type="text" class="form-control" id="companyname" placeholder="Company Name"
+                <input type="text" minlength="3" class="form-control" id="companyname" placeholder="Company Name"
                        >
             </div>
             <div class="form-group">
                 <label for="firstname">First Name</label>
-                <input type="text" class="form-control" id="firstname" placeholder="First Name"
+                <input type="text" minlength="3"  class="form-control" id="firstname" placeholder="First Name"
                        >
             </div>
             <div class="form-group">
                 <label for="lastname">Last Name</label>
-                <input type="text" class="form-control" id="lastname" placeholder="Last Name"
+                <input type="text" minlength="3"  class="form-control" id="lastname" placeholder="Last Name"
                        >
             </div>
             <div class="form-group">
                 <label for="telephone">Telephone</label>
-                <input type="text" class="form-control" id="telephone" placeholder="Telephone"
+                <input type="text" minlength="10"  class="form-control" id="telephone" placeholder="Telephone"
                        >
             </div>
             <div class="form-group">
                 <label for="Position">Position</label>
-                <input type="text" class="form-control" id="Position" placeholder="Position"
+                <input type="text" minlength="3" class="form-control" id="Position" placeholder="Position"
                 >
                 <div class="form-group">
                 </div>
@@ -137,7 +138,7 @@
                 <div class="form-group">
                     <label for="compnum">Company Number</label>
                     <input type="text" class="form-control" id="compnum" placeholder="Company Number"
-                           >
+                           minlength="6" maxlength="9">
                 </div>
                 <button id='next' class='btn btn-success'>Next </button>
             </div>
