@@ -23,7 +23,7 @@ class GreenData extends AbstractModel
 
     public function getCmp($userId)
     {
-        if (isset($userid)) {
+        if (isset($userId)) {
             $sql = "SELECT cmp FROM recyc_customer_links_to_company AS u
             JOIN recyc_company_sync AS s ON
             s.company_id = u.company_id
