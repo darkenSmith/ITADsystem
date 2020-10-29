@@ -30,7 +30,7 @@ class Confirm extends AbstractModel
             $sql = "UPDATE
                   Booked_Collections
                 SET
-                ConfirmEmailSent = :ConfirmEmailSent
+                ConfirmEmailSent = :ConfirmEmailSent,
                 booking_status = :booking_status
                 WHERE
                   RequestID = :RequestID
