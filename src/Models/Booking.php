@@ -1,20 +1,21 @@
 <?php
-
 namespace App\Models;
 
 use App\Helpers\Config;
 use App\Helpers\Database;
 use App\Helpers\FileHelper;
 use App\Helpers\Logger;
-use App\Models\Getgreendata;
 
+/**
+ * Class Booking
+ * @package App\Models
+ */
 class Booking extends AbstractModel
 {
     public const BOOKING_FOLDER = 'uploads';
     public const UPLOAD_FOLDER = 'images/';
     private $emailConfig;
     private $emailReceiver = 'stoneITAD@stonegroup.co.uk';
-    public $cmpnumber;
 
     /**
      * Collection constructor.
@@ -25,7 +26,6 @@ class Booking extends AbstractModel
         $this->emailConfig = Config::getInstance()->get('email');
 
         $this->sdb = Database::getInstance('sql01');
-
     }
 
     public function updateTables()
@@ -39,8 +39,8 @@ class Booking extends AbstractModel
 
         $next = 0;
 
-        $this->cmpnumber = new Getgreendata();
-        $cmp = $this->cmpnumber->getcmp($_POST['user']['id']);
+        $cmpNumber = new GreenData();
+        $cmp = $cmpNumber->getCmp($_SESSION['user']['id']);
 
         $cust_name = $_POST['org'];
         $cust_email = $_POST['email'];
@@ -150,7 +150,6 @@ exec updatearea @rid = '" . $_SESSION['rid'] . "';";
 
             array_push($obj, $output);
             $idobj = $obj[0]['id'];
-
 
             Logger::getInstance("val.log")->debug($idobj);
             Logger::getInstance("detail.log")->debug(print_r($output, true));
