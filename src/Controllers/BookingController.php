@@ -28,20 +28,18 @@ class BookingController extends AbstractController
 
     public function request(): void
     {
-        if ($_SESSION['user']['approved'] == 1) {
-
+        if (isset($_SESSION['user']['approved']) && $_SESSION['user']['approved'] == 1) {
             $this->template->view(
-            'booking/request-form',
-             []
-                );
-                }else{
-                    $this->template->view(
-                        'register/register-form',
-                        []
-                    );
-                }
+                'booking/request-form',
+                []
+            );
+        } else {
+            $this->template->view(
+                'booking/request-stop',
+                []
+            );
+        }
     }
-
     public function update(): void
     {
 
