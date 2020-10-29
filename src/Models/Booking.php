@@ -38,7 +38,6 @@ class Booking extends AbstractModel
         $requestid = $d['id'];
 
         $next = 0;
-
         $cmpNumber = new GreenData();
         $cmp = $cmpNumber->getCmp($_SESSION['user']['id']);
 
@@ -132,15 +131,32 @@ class Booking extends AbstractModel
 
         $_SESSION['rid'] = $requestid;
 
+        Logger::getInstance("BookingDebugging.log")->debug(
+            'before-sqlup',
+            [
+                'line' => __LINE__,
+                'cmp' => $cmp,
+                'reqid' => $reqid,
+            ]
+        );
+
         $sqlup = "insert into request(customer_name, customer_email, customer_phone,
-premise_code, premise_exempt, add1, add2, add3, town, postcode, contact_name, contact_tel, request_col_date, req_col_instrct, request_date_added, customer_contact, customer_contact_positon, bio_pass, SICcode, country, request_id, deleted, confirmed, done,  laststatus, GDPRconf, charge, area1, [Early Acess notes], Help_Onsite, [Parking Notes], lift, ground, steps, twoman, avoidtimes, user_id, crmnumbers)
+premise_code, premise_exempt, add1, add2, add3, town, postcode, contact_name, contact_tel, request_col_date, req_col_instrct, request_date_added, customer_contact, customer_contact_positon, bio_pass, SICcode, country, request_id, deleted, confirmed, done,  laststatus, GDPRconf, charge, area1, [Early Acess notes], Help_Onsite, [Parking Notes], lift, ground, steps, twoman, avoidtimes, user_id, cmp_number)
 
 values('" . $cleanname . "', '" . $cleanemail . "', '" . $cust_tel . "', '" . $premisecode . "', '" . $is_exempt . "', '" . $cleanadd1 . "', '" . $cleanadd2 . "', '" . $cleanadd3 . "', '" . $cleantown . "', '" . $cleanpostcode . "', '" . $cleancontact . "',
 '" . $contact_tel . "', '" . $cleancoldatenote . "', '" . $cleancolinstruct . "', '" . $timestamp . "', '" . $cleanrequest . "', '" . $position . "','" . $biocl . "','" . $sic . "', '" . $country . "', " . $_SESSION['rid'] . ", '0', '0', '0', 'Request', '1', " . $charge . ", 'Empty', '" . $accessclean . "', '" . $onsiteclean . "', '" . $parkingclean . "', '" . $liftclean . "', '" . $groundclean . "', '" . $stepsclean . "', '" . $twomanclean . "', '" . $avoidclean . "', '".$_SESSION['user']['id']."', '".$cmp."');
 exec updatearea @rid = '" . $_SESSION['rid'] . "';";
 
-        $log = date("Y/m/d") . "  " . $cleanname . " " . "\n\n" . $cleanemail . " " . "\n\n" . $cust_tel . " " . "\n\n" . "orginal ID:" . " " . $_SESSION['rid'] . "\r\n";
-        Logger::getInstance("RequestLog.log")->debug($log);
+        Logger::getInstance("BookingDebugging.log")->debug(
+            'sqlup',
+            [
+                'line' => __LINE__,
+                'arrfinal' => $arrfinal,
+                'cmp' => $cmp,
+                'reqid' => $reqid,
+                'sqlup' => [trim(preg_replace('/\s\s+/', ' ', $sqlup))],
+            ]
+        );
 
         $debug_txt .= $sqlup . "\n\n";
         $sqlup2 = '';
@@ -214,7 +230,7 @@ WHERE row_num > 1;";
             $email = new \SendGrid\Mail\Mail();
             $sendgridConfig = $this->emailConfig['sendgrid'];
 
-            $fullpath = PROJECT_DIR . "assets/doc/ITADCOVID19terms.pdf";                            // Passing `true` enables exceptions
+            $fullpath = PROJECT_DIR . "assets/doc/ITADCOVID19terms.pdf";
             try {
                 $email->setFrom($sendgridConfig['from']['ITADSystem'], "ITAD System");
                 $email->setSubject('New Request - Stone  ITAD  - ' . $_SESSION['rid']);
@@ -227,12 +243,12 @@ WHERE row_num > 1;";
                 $att1->setDisposition("attachment");
                 $email->addAttachment($att1);
 
-                $content = file_get_contents(PROJECT_DIR . 'views/template/email/new-request.php');
+                $newRequestHTML = file_get_contents(PROJECT_DIR . 'views/template/email/new-request.php');
 
-                $email->addContent("text/html", $content);
+                $email->addContent("text/html", $newRequestHTML);
                 $sendgrid = new \SendGrid($sendgridConfig['api']['key']);
                 $response = $sendgrid->send($email);
-
+                Logger::getInstance("BookingData.log")->warning('Body', [$response->body()]);
                 if ($response->statusCode() !== 202) {
                     Logger::getInstance("Mailfailed.log")->warning('Body', [$response->body()]);
 
@@ -244,12 +260,12 @@ WHERE row_num > 1;";
                 Logger::getInstance("Mailfailed.log")->warning('Mailfailed', [$e->getMessage()]);
             }
 
-            $sqlcheck = 'select Request_id from request where Request_id = ' . $_SESSION['rid'];
+            $sqlcheck = 'select Request_id from request where Request_id = :requestID';
+            $stmt = $this->sdb->prepare($sqlcheck);
+            $stmt->execute(['requestID' => $_SESSION['rid']]);
+            $runCheck = $stmt->fetch(\PDO::FETCH_OBJ);
 
-            $runcheck = $this->sdb->prepare($sqlcheck);
-            $runcheck->execute();
-
-            if (!$runcheck) {
+            if (empty($runCheck->Request_id)) {
                 $email = new \SendGrid\Mail\Mail();
                 $sendgridConfig = $this->emailConfig['sendgrid'];
                 try {
@@ -257,9 +273,11 @@ WHERE row_num > 1;";
                     $email->addTo($cust_email);
                     $email->setSubject('New Request ' . $_SESSION['rid']);
 
-                    $content = file_get_contents(PROJECT_DIR . 'views/template/email/new-request-run-check.php');
+                    $newRequestRunCheckHTML = file_get_contents(
+                        PROJECT_DIR . 'views/template/email/new-request-run-check.php'
+                    );
 
-                    $email->addContent("text/html", $content);
+                    $email->addContent("text/html", $newRequestRunCheckHTML);
                     $sendgrid = new \SendGrid($sendgridConfig['api']['key']);
                     $response = $sendgrid->send($email);
 
@@ -366,11 +384,10 @@ where Request_id =  " . $_SESSION['rid'];
 
             if (isset($pics) && !empty($pics)) {
                 Logger::getInstance("attachments.log")->debug('pics', $pics);
-                $uploadDir = FileHelper::getInstance()->getRealPath(PROJECT_DIR . self::BOOKING_FOLDER);
+                $uploadDir = FileHelper::getInstance()->getRealPath(PROJECT_DIR . self::BOOKING_FOLDER) . '/';
 
                 foreach ($pics as $ff) {
-                    $fullpath = $uploadDir . '/' . $ff['filename'];
-
+                    $fullpath = str_replace('/uploads/', $uploadDir, $ff['filename']);
                     $mimeContentType = mime_content_type($fullpath);
 
                     $this->compressImage($fullpath, $fullpath, 80);
@@ -384,7 +401,7 @@ where Request_id =  " . $_SESSION['rid'];
                 }
             }
 
-            $content = ' <!DOCTYPE html>
+            $html = '<!DOCTYPE html>
   <html>
   <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -401,7 +418,7 @@ RequestID : ' . $_SESSION['rid'] . '.
 </body>
 </html>';
 
-            $email->addContent("text/html", $content);
+            $email->addContent("text/html", $html);
             $sendgrid = new \SendGrid($sendgridConfig['api']['key']);
             $response = $sendgrid->send($email);
 
