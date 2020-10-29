@@ -124,6 +124,18 @@ class Register extends AbstractModel
                         $result = $this->rdb->prepare($sql);
                         $result->execute([':userid' => $this->user->id, ':companyid' => $this->exsitcompany]);
 
+                        $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP) VALUES (:recyc,:greenoak,:company,:cmp)";
+                        $result = $this->rdb->prepare($sql);
+                        $result->execute(
+                            [
+                                ':recyc' => $this->exsitcompany,
+                                ':greenoak' => 'AWAITING UPDATE',
+                                ':company' => $company_name,
+                                ':cmp' => null
+                            ]
+                        );
+
+
                         Logger::getInstance("Register.log")->info(
                             'insert',
                             ['line' => __LINE__,
