@@ -5,6 +5,7 @@ use App\Helpers\Config;
 use App\Helpers\Database;
 use App\Helpers\FileHelper;
 use App\Helpers\Logger;
+use App\Models\GreenData;
 
 /**
  * Class Booking
