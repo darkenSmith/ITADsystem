@@ -28,7 +28,7 @@ class BookingController extends AbstractController
 
     public function request(): void
     {
-        if (isset($_SESSION['user']['approved']) && $_SESSION['user']['approved'] == 1) {
+        if (isset($_SESSION['user']['approved']) && $_SESSION['user']['approved'] == 'Y') {
             $this->template->view(
                 'booking/request-form',
                 []
@@ -40,6 +40,7 @@ class BookingController extends AbstractController
             );
         }
     }
+
     public function update(): void
     {
 
