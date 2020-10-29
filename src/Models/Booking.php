@@ -509,7 +509,7 @@ RequestID : ' . $_SESSION['rid'] . '.
                         Logger::getInstance("uploadstatloc.log")->debug('uploadstatloc', [$Test]);
 
                         $idpic++;
-                        $loc = self::UPLOAD_FOLDER . str_replace('\\', '/', $Test);
+                        $loc = '/' .self::BOOKING_FOLDER . '/' . self::UPLOAD_FOLDER . str_replace('\\', '/', $Test);
                         $filearr[] = $loc;
 
                         $_SESSION['filestuff'] = $filearr;
