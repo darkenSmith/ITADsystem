@@ -6,6 +6,7 @@ use App\Helpers\Config;
 use App\Helpers\Database;
 use App\Helpers\FileHelper;
 use App\Helpers\Logger;
+use App\Models\Getgreendata;
 
 class Booking extends AbstractModel
 {
@@ -13,6 +14,7 @@ class Booking extends AbstractModel
     public const UPLOAD_FOLDER = 'images/';
     private $emailConfig;
     private $emailReceiver = 'stoneITAD@stonegroup.co.uk';
+    public $cmpnumber;
 
     /**
      * Collection constructor.
@@ -23,6 +25,7 @@ class Booking extends AbstractModel
         $this->emailConfig = Config::getInstance()->get('email');
 
         $this->sdb = Database::getInstance('sql01');
+
     }
 
     public function updateTables()
@@ -35,6 +38,9 @@ class Booking extends AbstractModel
         $requestid = $d['id'];
 
         $next = 0;
+
+        $this->cmpnumber = new Getgreendata();
+        $cmp = $this->cmpnumber->getcmp($_POST['user']['id']);
 
         $cust_name = $_POST['org'];
         $cust_email = $_POST['email'];
@@ -127,10 +133,10 @@ class Booking extends AbstractModel
         $_SESSION['rid'] = $requestid;
 
         $sqlup = "insert into request(customer_name, customer_email, customer_phone,
-premise_code, premise_exempt, add1, add2, add3, town, postcode, contact_name, contact_tel, request_col_date, req_col_instrct, request_date_added, customer_contact, customer_contact_positon, bio_pass, SICcode, country, request_id, deleted, confirmed, done,  laststatus, GDPRconf, charge, area1, [Early Acess notes], Help_Onsite, [Parking Notes], lift, ground, steps, twoman, avoidtimes, user_id)
+premise_code, premise_exempt, add1, add2, add3, town, postcode, contact_name, contact_tel, request_col_date, req_col_instrct, request_date_added, customer_contact, customer_contact_positon, bio_pass, SICcode, country, request_id, deleted, confirmed, done,  laststatus, GDPRconf, charge, area1, [Early Acess notes], Help_Onsite, [Parking Notes], lift, ground, steps, twoman, avoidtimes, user_id, crmnumbers)
 
 values('" . $cleanname . "', '" . $cleanemail . "', '" . $cust_tel . "', '" . $premisecode . "', '" . $is_exempt . "', '" . $cleanadd1 . "', '" . $cleanadd2 . "', '" . $cleanadd3 . "', '" . $cleantown . "', '" . $cleanpostcode . "', '" . $cleancontact . "',
-'" . $contact_tel . "', '" . $cleancoldatenote . "', '" . $cleancolinstruct . "', '" . $timestamp . "', '" . $cleanrequest . "', '" . $position . "','" . $biocl . "','" . $sic . "', '" . $country . "', " . $_SESSION['rid'] . ", '0', '0', '0', 'Request', '1', " . $charge . ", 'Empty', '" . $accessclean . "', '" . $onsiteclean . "', '" . $parkingclean . "', '" . $liftclean . "', '" . $groundclean . "', '" . $stepsclean . "', '" . $twomanclean . "', '" . $avoidclean . "', '".$_SESSION['user']['id']."');
+'" . $contact_tel . "', '" . $cleancoldatenote . "', '" . $cleancolinstruct . "', '" . $timestamp . "', '" . $cleanrequest . "', '" . $position . "','" . $biocl . "','" . $sic . "', '" . $country . "', " . $_SESSION['rid'] . ", '0', '0', '0', 'Request', '1', " . $charge . ", 'Empty', '" . $accessclean . "', '" . $onsiteclean . "', '" . $parkingclean . "', '" . $liftclean . "', '" . $groundclean . "', '" . $stepsclean . "', '" . $twomanclean . "', '" . $avoidclean . "', '".$_SESSION['user']['id']."', '".$cmp."');
 exec updatearea @rid = '" . $_SESSION['rid'] . "';";
 
         $log = date("Y/m/d") . "  " . $cleanname . " " . "\n\n" . $cleanemail . " " . "\n\n" . $cust_tel . " " . "\n\n" . "orginal ID:" . " " . $_SESSION['rid'] . "\r\n";
