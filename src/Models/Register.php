@@ -34,7 +34,7 @@ class Register extends AbstractModel
             $this->companyHouseData = CompanyHouseApi::getInstance()->get('company', $query);
         } elseif ($by === 'companyName') {
             $this->companyHouseData = CompanyHouseApi::getInstance()->get(
-                'company',
+                'search/companies',
                 '?q=' . urlencode($query)
             );
         }
