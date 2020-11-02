@@ -7,7 +7,8 @@
         "ext-pdo": "*",
         "psr/log": "^1.1",
         "monolog/monolog": "^2.0",
-        "ext-fileinfo": "*"
+        "ext-fileinfo": "*",
+        "guzzlehttp/guzzle": "^7.2"
     },
     "require-dev": {
         "sensiolabs/security-checker": "^5.0",

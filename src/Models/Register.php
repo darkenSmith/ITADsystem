@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\CompanyHouseApi;
 use App\Helpers\Logger;
 use Exception;
 
@@ -13,6 +14,7 @@ class Register extends AbstractModel
 {
     public $user;
     public $exsitcompany;
+    private $companyHouseData = [];
 
     /**
      * Register constructor.
@@ -20,6 +22,22 @@ class Register extends AbstractModel
     public function __construct()
     {
         parent::__construct();
+    }
+
+    /**
+     * @param string $query
+     * @param string $by
+     */
+    public function initializeCompanyHouseData(string $query, string $by = 'companyNumber'): void
+    {
+        if ($by === 'companyNumber') {
+            $this->companyHouseData = CompanyHouseApi::getInstance()->get('company', $query);
+        } elseif ($by === 'companyName') {
+            $this->companyHouseData = CompanyHouseApi::getInstance()->get(
+                'company',
+                '?q=' . urlencode($query)
+            );
+        }
     }
 
     public function register()
@@ -234,6 +252,20 @@ class Register extends AbstractModel
         }
     }
 
+    private function getFilteredCompanyNumber($companyNumber)
+    {
+        $companyNumber = preg_replace(
+            '/\s+/',
+            '',
+            filter_var(
+                $companyNumber,
+                FILTER_SANITIZE_STRING
+            )
+        );
+
+        return preg_replace('/[^A-Za-z0-9\-]/', '', $companyNumber);
+    }
+
     public function isCompanyExist($companyName)
     {
         $sql = 'SELECT id FROM `recyc_company_list` WHERE company_name = :companyname';
@@ -262,20 +294,6 @@ class Register extends AbstractModel
         $values = array(':token' => $this->token, ':expiry' => $this->expiry, ':id' => $this->user->id);
         $result = $this->rdb->prepare($sql);
         $result->execute($values);
-    }
-
-    private function getFilteredCompanyNumber($companyNumber)
-    {
-        $companyNumber = preg_replace(
-            '/\s+/',
-            '',
-            filter_var(
-                $companyNumber,
-                FILTER_SANITIZE_STRING
-            )
-        );
-
-        return preg_replace('/[^A-Za-z0-9\-]/', '', $companyNumber);
     }
 
     private function passValidation($pass)
