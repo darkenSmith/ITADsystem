@@ -27,8 +27,9 @@ class Register extends AbstractModel
     /**
      * @param string $query
      * @param string $by
+     * @return mixed
      */
-    public function initializeCompanyHouseData(string $query, string $by = 'companyNumber'): void
+    public function initializeCompanyHouseData(string $query, string $by = 'companyNumber')
     {
         if ($by === 'companyNumber') {
             $this->companyHouseData = CompanyHouseApi::getInstance()->get('company', $query);
@@ -38,6 +39,30 @@ class Register extends AbstractModel
                 '?q=' . urlencode($query)
             );
         }
+
+        return $this->companyHouseData;
+    }
+
+    public function checkCompany()
+    {
+        $company_number = $this->getFilteredCompanyNumber($_POST['compnum']);
+        $company_name = filter_var($_POST['companyname'], FILTER_SANITIZE_STRING);
+
+        $companyNumberResult = $this->initializeCompanyHouseData($company_number, 'companyNumber');
+        $companyNameResult = $this->initializeCompanyHouseData($company_name, 'companyName'); //multiple result
+
+        if ($this->isCompanyExist($company_name)) {
+
+        }
+
+        return [
+            'company' => [
+                'process' => true,
+                'companies' => $companyNameResult,
+                'registration_number' => $company_number,
+                'company_name' => $company_name
+            ]
+        ];
     }
 
     public function register()

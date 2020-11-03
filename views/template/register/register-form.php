@@ -27,6 +27,28 @@
                 ) {
                     alert("please fill in form correctly");
                 } else {
+
+                    jQuery.ajax({
+                        url: "/register/checkCompany",
+                        type: "POST",
+                        dataType : "json",
+                        data: {
+                            companyname: companyname,
+                            compnum: compnum
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            if(data.company.process) {
+
+                                jQuery('#company_list').html(data.company.companies);
+                                alert(1);
+                            } else {
+                                alert(2);
+                            }
+                        }
+                    });
+
+
                     $('#part2').show();
 
                     $('#part1').hide();
@@ -106,6 +128,7 @@
                 <label for="companyname">Company Name</label>
                 <input type="text" minlength="3" class="form-control" id="companyname" placeholder="Company Name"
                        >
+                <div id="company_list"></div>
             </div>
             <div class="form-group">
                 <label for="firstname">First Name</label>

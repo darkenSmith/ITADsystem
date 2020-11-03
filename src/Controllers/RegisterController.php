@@ -33,4 +33,9 @@ class RegisterController extends AbstractController
     {
         echo json_encode((new Register())->register());
     }
+
+    public function checkCompany()
+    {
+        echo json_encode((new Register())->checkCompany());
+    }
 }
