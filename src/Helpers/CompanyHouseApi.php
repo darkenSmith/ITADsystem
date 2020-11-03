@@ -47,6 +47,7 @@ class CompanyHouseApi
 
         try {
             $client = new Client();
+            
 
             $headers = [
                 'Authorization' => "Basic " . base64_encode($this->apiConf['api']['key'] . ":"),
@@ -55,7 +56,10 @@ class CompanyHouseApi
             $response = $client->request(
                 'GET',
                 sprintf('%s%s%s', $this->apiConf['api']['url'], $endpoint, $parameter),
-                ['headers' => $headers]
+                [
+                    'headers' => $headers,
+                    'verify' => false
+                ]
             );
 
             Logger::getInstance("CompanyHouseApi.log")->info(

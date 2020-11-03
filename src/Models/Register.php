@@ -59,6 +59,7 @@ class Register extends AbstractModel
             'company' => [
                 'process' => true,
                 'companies' => $companyNameResult,
+                'companyNumberResult' => $companyNumberResult,
                 'registration_number' => $company_number,
                 'company_name' => $company_name
             ]

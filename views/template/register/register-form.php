@@ -1,10 +1,11 @@
 <script type="text/javascript">
     jQuery(document).ready(function () {
-        
+        var comp = [];
 
-        $('#part2').hide();
+
+        $("#compselect").hide();
+        $("#part2").hide();
         let password, username, email, companyname, compnum, comptype, firstname, lastname, telephone, position;
-
         jQuery('#next').on('click', function (e) {
             e.preventDefault();
             password = jQuery('#password').val();
@@ -17,6 +18,7 @@
             lastname = jQuery('#lastname').val();
             telephone = jQuery('#telephone').val();
             position = jQuery('#Position').val();
+ 
 
                 if (
                     (undefined !== companyname && companyname.length < 3) ||
@@ -40,20 +42,41 @@
                             console.log(data);
                             if(data.company.process) {
 
-                                jQuery('#company_list').html(data.company.companies);
-                                alert(1);
-                            } else {
-                                alert(2);
+                              
+                               var comp = data.company.companies.items;
+
+                               if(comp.length > 0){
+
+                               
+                               $.each(comp, function (index, value) {
+                                        console.log(index+' : '+value.title);
+
+                                $("#compselect").append("<option value='"+value.company_number+"'>"+value.title+"</option>");
+                                $("#compselect").show();
+                                $('#compselect').change(function(){
+                                    if($("#compselect option:selected").text() != 'Please select match.' || index.length == 0) {
+                                        jQuery('#companyname').val($("#compselect option:selected").text());
+                                        jQuery('#compnum').val($("#compselect option:selected").val());
+                                        // $('#part2').show();
+                                        // $('#part1').hide();
+                                    }else{
+                                        alert("False");
+                                    }
+                                });
+
+                             });
+                        }else{
+                            $('#part2').show();
+                            $('#part1').hide();
+                        }
+                                    // alert(1);
+  
+                               }else {
+                            alert(2);
                             }
                         }
                     });
-
-
-                    $('#part2').show();
-
-                    $('#part1').hide();
                 }
-
         });
 
         jQuery('#reg').on('click', function (e) {
@@ -128,7 +151,14 @@
                 <label for="companyname">Company Name</label>
                 <input type="text" minlength="3" class="form-control" id="companyname" placeholder="Company Name"
                        >
-                <div id="company_list"></div>
+                <div id="company_list">
+                    <select id='compselect'>
+                        <option> Please select match. </option>
+                        
+
+                    </select>
+
+                </div>
             </div>
             <div class="form-group">
                 <label for="firstname">First Name</label>
