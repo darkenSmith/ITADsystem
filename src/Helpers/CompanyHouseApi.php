@@ -56,7 +56,7 @@ class CompanyHouseApi
                 'GET',
                 sprintf('%s%s%s', $this->apiConf['api']['url'], $endpoint, $parameter),
                 ['headers' => $headers,
-                'verify' => $this->apiConf['ssl']['verify'],
+                'verify' => $this->apiConf['ssl']['verify'] ? true : false,
                 ]
             );
 
