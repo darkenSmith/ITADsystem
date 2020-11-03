@@ -42,10 +42,13 @@ class Company extends AbstractModel
         if ($this->companies) {
             foreach ($this->companies as $company) {
                 $data = $this->loadById($company->company_id);
-                foreach ($data as $key => $value) {
+                if(is_array($data) || is_object($data)){
+                    foreach ($data as $key => $value) {
                     $company->{$key} = $value;
                 }
-                $this->checkFiles($company->collections);
+                    $this->checkFiles($company->collections);
+                }
+
             }
         }
         unset($this->rdb);

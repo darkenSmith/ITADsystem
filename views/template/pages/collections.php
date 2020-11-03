@@ -4,13 +4,13 @@
         <th class="col-sm-1">Date</th>
         <th class="col-sm-2">Order Number</th>
         <th class="col-sm-5">Collection Location</th>
-        <?php if ($data->cod_required == 1) { ?>
+        <?php if (isset($data->cod_required) ? $data->cod_required : 0 == 1) { ?>
             <th class="col-sm-1">COD Status</th>
         <?php }
-        if ($data->amr_required == 1) { ?>
+        if (isset($data->amr_required) ? $data->amr_required : 0 == 1) { ?>
             <th class="col-sm-1">AMR Status</th>
         <?php }
-        if ($data->rebate_required == 1) {
+        if (isset($data->rebate_required) ? $data->rebate_required : 0  == 1) {
             ?>
             <th class="col-sm-1">Rebate Status</th>
         <?php } ?>
