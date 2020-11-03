@@ -28,7 +28,7 @@
                     (undefined !== telephone && telephone.length < 11)
                 ) {
                     alert("please fill in form correctly");
-                } else {
+                } else if(comptype == 'CH'){
 
                     jQuery.ajax({
                         url: "/register/checkCompany",
@@ -76,6 +76,10 @@
                             }
                         }
                     });
+                }else{
+                   
+                    $('#part2').show();
+                    $('#part1').hide();
                 }
         });
 
