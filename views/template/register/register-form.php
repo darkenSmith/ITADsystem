@@ -1,7 +1,7 @@
 <script type="text/javascript">
     jQuery(document).ready(function () {
-        var comp = [];
-
+        let comp = [];
+        let step2_available = false;
 
         $("#compselect").hide();
         $("#part2").hide();
@@ -18,71 +18,70 @@
             lastname = jQuery('#lastname').val();
             telephone = jQuery('#telephone').val();
             position = jQuery('#Position').val();
- 
 
-                if (
-                    (undefined !== companyname && companyname.length < 3) ||
-                    (undefined !== compnum && compnum.length < 6 && compnum.length > 9) ||
-                    (undefined !== firstname && firstname.length < 3) ||
-                    (undefined !== lastname && lastname.length < 3) ||
-                    (undefined !== telephone && telephone.length < 11)
-                ) {
-                    alert("please fill in form correctly");
-                } else if(comptype == 'CH'){
+            if (
+                (undefined !== companyname && companyname.length < 3) ||
+                (undefined !== compnum && compnum.length < 6 && compnum.length > 9) ||
+                (undefined !== firstname && firstname.length < 3) ||
+                (undefined !== lastname && lastname.length < 3) ||
+                (undefined !== telephone && telephone.length < 11)
+            ) {
+                alert("please fill in form correctly");
+            } else if (comptype == 'CH') {
+                jQuery.ajax({
+                    url: "/register/checkCompany",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        companyname: companyname,
+                        compnum: compnum
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if (data.company.process) {
+                            var comp = data.company.companies.items;
 
-                    jQuery.ajax({
-                        url: "/register/checkCompany",
-                        type: "POST",
-                        dataType : "json",
-                        data: {
-                            companyname: companyname,
-                            compnum: compnum
-                        },
-                        success: function (data) {
-                            console.log(data);
-                            if(data.company.process) {
-
-                              
-                               var comp = data.company.companies.items;
-
-                               if(comp.length > 0){
-
-                               
-                               $.each(comp, function (index, value) {
-                                        console.log(index+' : '+value.title);
-
-                                $("#compselect").append("<option value='"+value.company_number+"'>"+value.title+"</option>");
-                                $("#compselect").show();
-                                $('#compselect').change(function(){
-                                    if($("#compselect option:selected").text() != 'Please select match.' || index.length == 0) {
-                                        jQuery('#companyname').val($("#compselect option:selected").text());
-                                        jQuery('#compnum').val($("#compselect option:selected").val());
-                                        // $('#part2').show();
-                                        // $('#part1').hide();
-                                    }else{
-                                        alert("False");
-                                    }
+                            if (comp.length > 0) {
+                                $.each(comp, function (index, value) {
+                                    console.log(index + ' : ' + value.title);
+                                    $("#compselect").append("<option value='" + value.company_number + "'>" + value.title + "</option>");
+                                    $("#compselect").show();
                                 });
-
-                             });
-                        }else{
-                            alert("stop");
-                            $('#part2').show();
-                            $('#part1').hide();
-                        }
-                                    // alert(1);
-  
-                               }else {
-                            alert(2);
+                            } else {
+                                step2_available = true;
                             }
+
+                        } else {
+                            step2_available = false;
                         }
-                    });
-                }else{
-                   
-                    $('#part2').show();
-                    $('#part1').hide();
-                }
+                    }
+                });
+            } else {
+                step2_available = true;
+            }
+
+            step2Pass(step2_available);
         });
+
+
+        function step2Pass(available) {
+            if (available) {
+                $('#part2').show();
+                $('#part1').hide();
+            } else {
+                $('#part2').hide();
+                $('#part1').show();
+            }
+        }
+
+        $('#compselect').change(function () {
+            if ($("#compselect option:selected").text() != 'Please select match.' || index.length == 0) {
+                jQuery('#companyname').val($("#compselect option:selected").text());
+                jQuery('#compnum').val($("#compselect option:selected").val());
+                step2Pass(true);
+            }
+        });
+
 
         jQuery('#reg').on('click', function (e) {
             e.preventDefault();
@@ -97,7 +96,7 @@
             if (username.length < 3) {
                 alert('Please enter your username');
                 jQuery('#username').focus();
-            }else if (!passwordcheck.test(password)) {
+            } else if (!passwordcheck.test(password)) {
                 alert('Minimum eight characters, at least one letter, one number and one special character:');
                 jQuery('#password').focus();
             } else if (lastname.length < 3) {
@@ -116,7 +115,7 @@
                 jQuery.ajax({
                     url: "/register/register",
                     type: "POST",
-                    dataType : "json",
+                    dataType: "json",
                     data: {
                         username: username,
                         firstname: firstname,
@@ -127,7 +126,7 @@
                         compnum: compnum,
                         telephone: telephone,
                         comptype: comptype,
-                        position : position
+                        position: position
                     },
                     success: function (data) {
                         //console.log(data);
@@ -136,7 +135,9 @@
                             $('#part2').hide();
                             $('#errorContainer').html(data.message);
                             //console.log(data.message);
-                            setTimeout(function(){ window.location = redirect; }, 2000);
+                            setTimeout(function () {
+                                window.location = redirect;
+                            }, 2000);
                         } else {
                             $('#errorContainer').html(data.message);
                         }
@@ -155,11 +156,11 @@
             <div class="form-group">
                 <label for="companyname">Company Name</label>
                 <input type="text" minlength="3" class="form-control" id="companyname" placeholder="Company Name"
-                       >
+                >
                 <div id="company_list">
                     <select id='compselect'>
-                        <option> Please select match. </option>
-                        
+                        <option> Please select match.</option>
+
 
                     </select>
 
@@ -167,18 +168,18 @@
             </div>
             <div class="form-group">
                 <label for="firstname">First Name</label>
-                <input type="text" minlength="3"  class="form-control" id="firstname" placeholder="First Name"
-                       >
+                <input type="text" minlength="3" class="form-control" id="firstname" placeholder="First Name"
+                >
             </div>
             <div class="form-group">
                 <label for="lastname">Last Name</label>
-                <input type="text" minlength="3"  class="form-control" id="lastname" placeholder="Last Name"
-                       >
+                <input type="text" minlength="3" class="form-control" id="lastname" placeholder="Last Name"
+                >
             </div>
             <div class="form-group">
                 <label for="telephone">Telephone</label>
-                <input type="text" minlength="10"  class="form-control" id="telephone" placeholder="Telephone"
-                       >
+                <input type="text" minlength="10" class="form-control" id="telephone" placeholder="Telephone"
+                >
             </div>
             <div class="form-group">
                 <label for="Position">Position</label>
@@ -198,7 +199,7 @@
                     <input type="text" class="form-control" id="compnum" placeholder="Company Number"
                            minlength="6" maxlength="9">
                 </div>
-                <button id='next' class='btn btn-success'>Next </button>
+                <button id='next' class='btn btn-success'>Next</button>
             </div>
         </div>
 
