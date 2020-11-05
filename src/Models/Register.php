@@ -13,7 +13,7 @@ use Exception;
 class Register extends AbstractModel
 {
     public $user;
-    public $exsitcompany;
+    public $existCompany;
     private $companyHouseData = [];
 
     /**
@@ -22,6 +22,42 @@ class Register extends AbstractModel
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function checkCompany()
+    {
+        $company_number = $this->getFilteredCompanyNumber($_POST['compnum']);
+        $company_name = filter_var($_POST['companyname'], FILTER_SANITIZE_STRING);
+
+        $companyNumberResult = $this->initializeCompanyHouseData($company_number, 'companyNumber');
+        $companyNameResult = $this->initializeCompanyHouseData($company_name, 'companyName'); //multiple result
+
+        if ($this->isCompanyExist($company_name)) {
+        }
+
+        return [
+            'company' => [
+                'process' => true,
+                'companies' => $companyNameResult,
+                'companyNumberResult' => $companyNumberResult,
+                'registration_number' => $company_number,
+                'company_name' => $company_name
+            ]
+        ];
+    }
+
+    private function getFilteredCompanyNumber($companyNumber)
+    {
+        $companyNumber = preg_replace(
+            '/\s+/',
+            '',
+            filter_var(
+                $companyNumber,
+                FILTER_SANITIZE_STRING
+            )
+        );
+
+        return preg_replace('/[^A-Za-z0-9\-]/', '', $companyNumber);
     }
 
     /**
@@ -43,27 +79,20 @@ class Register extends AbstractModel
         return $this->companyHouseData;
     }
 
-    public function checkCompany()
+    public function isCompanyExist($companyName)
     {
-        $company_number = $this->getFilteredCompanyNumber($_POST['compnum']);
-        $company_name = filter_var($_POST['companyname'], FILTER_SANITIZE_STRING);
+        $sql = 'SELECT id FROM `recyc_company_list` WHERE company_name = :companyname';
+        $result = $this->rdb->prepare($sql);
+        $result->execute(array(':companyname' => $companyName));
+        $company = $result->fetch(\PDO::FETCH_OBJ);
 
-        $companyNumberResult = $this->initializeCompanyHouseData($company_number, 'companyNumber');
-        $companyNameResult = $this->initializeCompanyHouseData($company_name, 'companyName'); //multiple result
 
-        if ($this->isCompanyExist($company_name)) {
-
+        if (!empty($company->id)) {
+            $this->existCompany = $company->id;
+            return true;
         }
 
-        return [
-            'company' => [
-                'process' => true,
-                'companies' => $companyNameResult,
-                'companyNumberResult' => $companyNumberResult,
-                'registration_number' => $company_number,
-                'company_name' => $company_name
-            ]
-        ];
+        return false;
     }
 
     public function register()
@@ -132,15 +161,13 @@ class Register extends AbstractModel
                             ':companyid' => $companyID
                         ]);
 
-                        $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP, insertedFrom) VALUES (:recyc,:greenoak,:company,:cmp, :insertedFrom)";
-                        $result = $this->rdb->prepare($sql);
-                        $result->execute(
+                        $this->saveToSync(
                             [
-                                ':recyc' => $companyID,
+                                ':company_id' => $companyID,
                                 ':greenoak' => 'AWAITING UPDATE',
                                 ':company' => $company_name,
                                 ':cmp' => null,
-                                ':insertedFrom' => 'itadsystem/register/newCompany/'.__LINE__,
+                                ':insertedFrom' => 'itadsystem/register/newCompany/' . __LINE__,
                             ]
                         );
 
@@ -169,26 +196,23 @@ class Register extends AbstractModel
                         $sql = 'INSERT INTO `recyc_customer_links_to_company` (user_id, company_id, `default`)
                      VALUES(:userid, :companyid, 1)';
                         $result = $this->rdb->prepare($sql);
-                        $result->execute([':userid' => $this->user->id, ':companyid' => $this->exsitcompany]);
+                        $result->execute([':userid' => $this->user->id, ':companyid' => $this->existCompany]);
 
-                        $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP, insertedFrom) VALUES (:recyc,:greenoak,:company,:cmp,:insertedFrom)";
-                        $result = $this->rdb->prepare($sql);
-                        $result->execute(
+                        $this->saveToSync(
                             [
-                                ':recyc' => $this->exsitcompany,
+                                ':company_id' => $this->existCompany,
                                 ':greenoak' => 'AWAITING UPDATE',
                                 ':company' => $company_name,
                                 ':cmp' => null,
-                                ':insertedFrom' => 'itadsystem/register/existingCompany/'.__LINE__,
+                                ':insertedFrom' => 'itadsystem/register/existingCompany/' . __LINE__,
                             ]
                         );
-
 
                         Logger::getInstance("Register.log")->info(
                             'insert',
                             ['line' => __LINE__,
                                 'user' => $this->user->id,
-                                'compid' => $this->exsitcompany
+                                'compid' => $this->existCompany
 
                             ]
                         );
@@ -282,33 +306,38 @@ class Register extends AbstractModel
         }
     }
 
-    private function getFilteredCompanyNumber($companyNumber)
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function saveToSync(array $data): bool
     {
-        $companyNumber = preg_replace(
-            '/\s+/',
-            '',
-            filter_var(
-                $companyNumber,
-                FILTER_SANITIZE_STRING
-            )
-        );
-
-        return preg_replace('/[^A-Za-z0-9\-]/', '', $companyNumber);
-    }
-
-    public function isCompanyExist($companyName)
-    {
-        $sql = 'SELECT id FROM `recyc_company_list` WHERE company_name = :companyname';
-        $result = $this->rdb->prepare($sql);
-        $result->execute(array(':companyname' => $companyName));
-        $company = $result->fetch(\PDO::FETCH_OBJ);
-
-
-        if (!empty($company->id)) {
-            $this->exsitcompany = $company->id;
+        if (!$this->isCompanyExistInSync($data['company_id'])) {
+            $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP, insertedFrom)
+                    VALUES (:company_id,:greenoak,:company,:cmp, :insertedFrom)";
+            $result = $this->rdb->prepare($sql);
+            $result->execute(
+                $data
+            );
             return true;
         }
+        return false;
+    }
 
+    /**
+     * @param int $company_id
+     * @return bool
+     */
+    public function isCompanyExistInSync(int $company_id): bool
+    {
+        $sql = "SELECT company_id FROM recyc_company_sync WHERE company_id = :company_id";
+        $result = $this->rdb->prepare($sql);
+        $result->execute([':company_id' => $company_id]);
+        $company = $result->fetch(\PDO::FETCH_OBJ);
+
+        if (!empty($company->company_id)) {
+            return true;
+        }
         return false;
     }
 
