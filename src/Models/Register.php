@@ -140,7 +140,7 @@ class Register extends AbstractModel
                                 ':greenoak' => 'AWAITING UPDATE',
                                 ':company' => $company_name,
                                 ':cmp' => null,
-                                ':insertedFrom' => 'itadsystem/register/newCompany',
+                                ':insertedFrom' => 'itadsystem/register/newCompany/'.__LINE__,
                             ]
                         );
 
@@ -179,7 +179,7 @@ class Register extends AbstractModel
                                 ':greenoak' => 'AWAITING UPDATE',
                                 ':company' => $company_name,
                                 ':cmp' => null,
-                                ':insertedFrom' => 'itadsystem/register/existingCompany',
+                                ':insertedFrom' => 'itadsystem/register/existingCompany/'.__LINE__,
                             ]
                         );
 
