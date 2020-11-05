@@ -114,6 +114,7 @@ class Register extends AbstractModel
                 $company_name = filter_var($_POST['companyname'], FILTER_SANITIZE_STRING);
                 ///add to company list
                 if (!$this->isCompanyExist($company_name)) {
+                    //company is not exist
                     try {
                         $sql = 'INSERT INTO `recyc_company_list` ( `company_name`, `portal_requirement`, `assigned_to_bdm`, `cod_required`, `amr_required`, `rebate_required`, `remarketingrep_required`, `blancco_required`, `manual_customer`, `reference_code`, `reference_source`)
                                 VALUES(:companyname, 1, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL)';
@@ -131,14 +132,15 @@ class Register extends AbstractModel
                             ':companyid' => $companyID
                         ]);
 
-                        $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP) VALUES (:recyc,:greenoak,:company,:cmp)";
+                        $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP, insertedFrom) VALUES (:recyc,:greenoak,:company,:cmp, :insertedFrom)";
                         $result = $this->rdb->prepare($sql);
                         $result->execute(
                             [
                                 ':recyc' => $companyID,
                                 ':greenoak' => 'AWAITING UPDATE',
                                 ':company' => $company_name,
-                                ':cmp' => null
+                                ':cmp' => null,
+                                ':insertedFrom' => 'itadsystem/register/newCompany',
                             ]
                         );
 
@@ -162,20 +164,22 @@ class Register extends AbstractModel
                         );
                     }
                 } else {
+                    //company is exist
                     try {
                         $sql = 'INSERT INTO `recyc_customer_links_to_company` (user_id, company_id, `default`)
                      VALUES(:userid, :companyid, 1)';
                         $result = $this->rdb->prepare($sql);
                         $result->execute([':userid' => $this->user->id, ':companyid' => $this->exsitcompany]);
 
-                        $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP) VALUES (:recyc,:greenoak,:company,:cmp)";
+                        $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP, insertedFrom) VALUES (:recyc,:greenoak,:company,:cmp,:insertedFrom)";
                         $result = $this->rdb->prepare($sql);
                         $result->execute(
                             [
                                 ':recyc' => $this->exsitcompany,
                                 ':greenoak' => 'AWAITING UPDATE',
                                 ':company' => $company_name,
-                                ':cmp' => null
+                                ':cmp' => null,
+                                ':insertedFrom' => 'itadsystem/register/existingCompany',
                             ]
                         );
 
