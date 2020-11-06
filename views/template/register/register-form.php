@@ -47,6 +47,7 @@
                                     $("#compselect").append("<option value='" + value.company_number + "'>" + value.title + "</option>");
                                     $("#compselect").show();
                                 });
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
                             } else {
                                 step2_available = true;
                             }
@@ -68,13 +69,15 @@
             if (available) {
                 $('#part2').show();
                 $('#part1').hide();
+                $('.step-title').html('(Step 2)');
             } else {
                 $('#part2').hide();
                 $('#part1').show();
+                $('.step-title').html('(Step 1)');
             }
         }
 
-        $('#compselect').change(function () {
+        $('#compselect').bind("change keyup",function() {
             if ($("#compselect option:selected").text() != 'Please select match.' || index.length == 0) {
                 jQuery('#companyname').val($("#compselect option:selected").text());
                 jQuery('#compnum').val($("#compselect option:selected").val());
@@ -149,7 +152,7 @@
 </script>
 
 <div class="row">
-    <h2 class="form-signin-heading">Register Here</h2>
+    <h2 class="form-signin-heading">Register Here <span class="step-title">(Step 1)</span></h2>
     <div id="errorContainer"></div>
     <form name='registration' method="">
         <div id='part1'>
@@ -158,7 +161,7 @@
                 <input type="text" minlength="3" class="form-control" id="companyname" placeholder="Company Name"
                 >
                 <div id="company_list">
-                    <select id='compselect'>
+                    <select id='compselect' class="form-control">
                         <option> Please select match.</option>
 
 
