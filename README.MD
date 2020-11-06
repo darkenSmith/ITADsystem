@@ -1,12 +1,12 @@
 # Configuration 
 Application settings are in `app.local.ini` file that located in project root.
-For the production change the settings in `app.local.ini` and rename it to `app.ini`.
+For the production change the settings in `app.local.ini` and rename it to `.app.ini`.
 
 # Development
 For development copy the `app.local.ini` file on your project root and name it `app.dev.ini`
 
 # Production
-For production use `app.ini` for settings and remove `app.dev.ini` and `app.local.ini` if it exists.
+For production use `.app.ini` for settings and remove `app.dev.ini` and `app.local.ini` if it exists.
 
 # Installation
 1- Clone repository
@@ -27,8 +27,13 @@ composer update
 
 # Folders 
 ```
-/uploads
-/booking/uploads
+/uploads/[images, pdf] (its symbolic link on production)
 /logs
 /tmp
 ```
+
+# Logs
+The logs/*.log files should be removed periodically for size will be high.
+The logger need to be removed from production code after the test process complete.
+
+
