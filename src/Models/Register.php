@@ -312,7 +312,7 @@ class Register extends AbstractModel
      */
     public function saveToSync(array $data): bool
     {
-        if (!$this->isCompanyExistInSync($data['company_id'])) {
+        if (!$this->isCompanyExistInSync($data[':company_id'])) {
             $sql = "INSERT INTO recyc_company_sync (company_id, greenoak_id, company_name, CMP, insertedFrom)
                     VALUES (:company_id,:greenoak,:company,:cmp, :insertedFrom)";
             $result = $this->rdb->prepare($sql);
