@@ -1,5 +1,5 @@
 <?php
-
+session_set_cookie_params(['samesite' => 'None']);
 session_start();
 
 use App\Helpers\App;
