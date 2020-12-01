@@ -32,8 +32,8 @@ class Config
 
         if (file_exists(PROJECT_DIR . "app.dev.ini")) {
             $this->config = $this->parse(PROJECT_DIR . "app.dev.ini", true);
-        } elseif (file_exists(PROJECT_DIR . "app.ini")) {
-            $this->config = $this->parse(PROJECT_DIR . "app.ini", true);
+        } elseif (file_exists(PROJECT_DIR . ".app.ini")) {
+            $this->config = $this->parse(PROJECT_DIR . ".app.ini", true);
         }
 
         if (!empty($type)) {
@@ -77,8 +77,7 @@ class Config
                         $subs = $value;
                         // unset the dotted key, we don't need it anymore
                         unset($data[$section_key][$key]);
-                    } // we have escaped the key, so we keep dots as they are
-                    else {
+                    } else {
                         $new_key = trim($key, $escape_char);
                         $data[$section_key][$new_key] = $value;
                         unset($data[$section_key][$key]);

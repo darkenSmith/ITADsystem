@@ -55,7 +55,9 @@ class CompanyHouseApi
             $response = $client->request(
                 'GET',
                 sprintf('%s%s%s', $this->apiConf['api']['url'], $endpoint, $parameter),
-                ['headers' => $headers]
+                ['headers' => $headers,
+                'verify' => $this->apiConf['ssl']['verify'] ? true : false,
+                ]
             );
 
             Logger::getInstance("CompanyHouseApi.log")->info(
