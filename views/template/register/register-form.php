@@ -139,7 +139,7 @@
                             $('#errorContainer').html(data.message);
                             //console.log(data.message);
                             setTimeout(function () {
-                                window.location = redirect;
+                                window.location = redirect; 
                             }, 2000);
                         } else {
                             $('#errorContainer').html(data.message);
@@ -152,17 +152,20 @@
 </script>
 
 <div class="row">
-    <h2 class="form-signin-heading">Register Here <span class="step-title">(Step 1)</span></h2>
+    <h2 class="form-signin-heading"><?= _REGISTER ?></h2>
+
     <div id="errorContainer"></div>
     <form name='registration' method="">
         <div id='part1'>
             <div class="form-group">
-                <label for="companyname">Company Name</label>
+                <label for="companyname"><?= _COMPANY ?></label>
                 <input type="text" minlength="3" class="form-control" id="companyname" placeholder="Company Name"
                 >
                 <div id="company_list">
-                    <select id='compselect' class="form-control">
-                        <option> Please select match.</option>
+
+                    <select id='compselect'>
+                        <option><?= _PLEASE ?></option>
+                        
 
 
                     </select>
@@ -170,52 +173,58 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="firstname">First Name</label>
-                <input type="text" minlength="3" class="form-control" id="firstname" placeholder="First Name"
-                >
+<<<<<<< HEAD
+                <label for="firstname"><?= _FNAME ?></label>
+                <input type="text" minlength="3"  class="form-control" id="firstname" placeholder="First Name"
+                       >
             </div>
             <div class="form-group">
-                <label for="lastname">Last Name</label>
-                <input type="text" minlength="3" class="form-control" id="lastname" placeholder="Last Name"
-                >
+                <label for="lastname"><?= _LNAME ?></label>
+                <input type="text" minlength="3"  class="form-control" id="lastname" placeholder="Last Name"
+                       >
             </div>
             <div class="form-group">
-                <label for="telephone">Telephone</label>
-                <input type="text" minlength="10" class="form-control" id="telephone" placeholder="Telephone"
-                >
+                <label for="telephone"><?= _TELE ?></label>
+                <input type="text" minlength="10"  class="form-control" id="telephone" placeholder="Telephone"
+                       >
+
             </div>
             <div class="form-group">
-                <label for="Position">Position</label>
+                <label for="Position"><?= _POSITION ?></label>
                 <input type="text" minlength="3" class="form-control" id="Position" placeholder="Position"
                 >
                 <div class="form-group">
                 </div>
                 <div class="form-group">
-                    <label for="comptype">My company is part of the...</label>
+                    <label for="comptype"><?= _COMPTYPETXT ?></label>
                     <select class="form-control" id="comptype">
-                        <option value="CH">Private</option>
-                        <option value="URN">Public</option>
+                        <option value="CH"><?= _PRIVATECOMP ?></option>
+                        <option value="URN"><?= _PUBLICCOMP ?></option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="compnum">Company Number</label>
+                    <label for="compnum"><?= _COMPANYNUM ?></label>
                     <input type="text" class="form-control" id="compnum" placeholder="Company Number"
                            minlength="6" maxlength="9">
                 </div>
+<<<<<<< HEAD
+                <button id='next' class='btn btn-success'><?= _NEXT ?> </button>
+=======
                 <button id='next' class='btn btn-success'>Next</button>
+>>>>>>> edbed6e7355b3c8e904ab456a1453d9229c3366d
             </div>
         </div>
 
         <div id='part2'>
             <div class="form-group">
-                <label for="username">Email Address</label>
+                <label for="username"><?= _EMAILADD ?></label>
                 <input type="email" class="form-control" id="username" placeholder="enter email here">
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password"><?= _PASSWORDTXT ?></label>
                 <input type="password" class="form-control" id="password" placeholder="password">
             </div>
-            <button class="btn btn-lg btn-primary btn-block" id="reg">Submit</button>
+            <button class="btn btn-lg btn-primary btn-block" id="reg"><?= _SUBMIT ?></button>
         </div>
     </form>
 </div>

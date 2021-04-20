@@ -27,13 +27,38 @@ class Config
      * @param string|null $type
      * @return array|false|mixed
      */
+
+    public function getlang(){
+
+        if(!isset($_SESSION['lang'])){
+            $_SESSION['lang'] = "en";
+           }
+
+        if(isset($_GET['lang']) && !empty($_GET['lang'])){
+            $_SESSION['lang'] = $_GET['lang'];
+           
+            if(isset($_SESSION['lang']) && $_SESSION['lang'] != $_GET['lang']){
+             echo "<script type='text/javascript'> location.reload(); </script>";
+            }
+           } 
+           
+          
+           if($_SESSION['lang'] == "en"){
+            $_SESSION['lang'] = "en";
+           }else if($_SESSION['lang'] == "fr"){
+            $_SESSION['lang'] = "fr";
+           }
+        require_once LANG_DIR.$_SESSION['lang'].'.php';
+    }
     public function get(?string $type = null)
     {
 
-        if (file_exists(PROJECT_DIR . "app.dev.ini")) {
-            $this->config = $this->parse(PROJECT_DIR . "app.dev.ini", true);
-        } elseif (file_exists(PROJECT_DIR . ".app.ini")) {
-            $this->config = $this->parse(PROJECT_DIR . ".app.ini", true);
+
+        if (file_exists(SAFE_DIR . "app.dev.ini")) {
+            $this->config = $this->parse(SAFE_DIR . "app.dev.ini", true);
+        } else if (file_exists(SAFE_DIR . ".app.ini")) {
+            $this->config = $this->parse(SAFE_DIR . ".app.ini", true);
+
         }
 
         if (!empty($type)) {

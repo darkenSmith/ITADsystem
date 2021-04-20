@@ -1,9 +1,16 @@
 <?php
 
+ 
+
 namespace App\Controllers;
+
+ 
 
 use App\Models\Booking;
 use App\Models\Collection;
+use App\Helpers\Config;
+
+ 
 
 /**
  * Class BookingController
@@ -12,11 +19,15 @@ use App\Models\Collection;
 class BookingController extends AbstractController
 {
 
+ 
+
     public function index(): void
     {
         $collections = new Collection();
         $collections->getCollections();
         $collections = $collections->collections;
+
+ 
 
         $this->template->view(
             'collection/list',
@@ -26,8 +37,13 @@ class BookingController extends AbstractController
         );
     }
 
+ 
+
     public function request(): void
     {
+
+        $conf = new Config();
+        $conf->getlang();
         if (isset($_SESSION['user']['approved']) && $_SESSION['user']['approved'] == 'Y') {
             $this->template->view(
                 'booking/request-form',
@@ -41,11 +57,17 @@ class BookingController extends AbstractController
         }
     }
 
+ 
+
     public function update(): void
     {
 
+ 
+
         $booking = new Booking();
         $booking->updateTables();
+
+ 
 
         $this->template->view(
             'booking/request-form',
@@ -53,13 +75,19 @@ class BookingController extends AbstractController
         );
     }
 
-    public function thankYou(): void
+ 
+
+    public function thankYou(): void 
     {
+        $conf = new Config();
+        $conf->getlang();
         $this->template->view(
             'booking/thank-you',
             []
         );
     }
+
+ 
 
     public function upload(): void
     {
@@ -67,3 +95,4 @@ class BookingController extends AbstractController
         $booking->upload();
     }
 }
+ 

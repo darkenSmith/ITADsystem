@@ -1,5 +1,6 @@
 <?php
 namespace App\Controllers;
+use App\Helpers\Config;
 
 use App\Models\Register;
 
@@ -9,8 +10,10 @@ use App\Models\Register;
  */
 class RegisterController extends AbstractController
 {
-    public function index()
+    public function index() 
     {
+        $Conf = new Config();
+        $Conf->getlang();
         if (isset($_SESSION['user']['id'])) {
             header('Location: /');
         } else {

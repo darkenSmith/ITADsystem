@@ -1,5 +1,21 @@
 <?php
 //@todo also need to handle failures.
+
+echo $_SESSION['lang'];
+
+
+if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
+$url = "https://";   
+else  
+$url = "http://";   
+// Append the host(domain name, ip) to the URL.   
+$url.= $_SERVER['HTTP_HOST'];   
+
+// Append the requested resource location to the URL   
+$url.= $_SERVER['REQUEST_URI'];    
+
+echo $_SERVER['REQUEST_URI'];  
+    
 ?>
 
 <script type="text/javascript">
@@ -49,6 +65,17 @@
                 });
             }
         });
+
+        $('#lang').on('change',function(e) {
+    switch($(this).val()) {
+        case 'en':
+            window.location = '/?lang='+$(this).val();
+        break;
+        case 'fr':
+            window.location = '/?lang='+$(this).val();
+        break;
+    }
+});
     });
 
 </script>
@@ -59,35 +86,39 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Reset Password</h4>
+                <h4 class="modal-title" id="myModalLabel"><?= _RESTARTXT ?></h4>
             </div>
             <div class="modal-body">
                 <form class="form" id="addressForm">
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email"><?= _EMAIL ?></label>
                         <input type="text" class="form-control" id="email" name="email" value=""/>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" id="sendReminder" class="btn btn-success">Reset Password</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?= _CLOSETEXT ?></button>
+                <button type="button" id="sendReminder" class="btn btn-success"><?= _RESTARTXT ?></button>
             </div>
         </div>
     </div>
 </div>
 <div class="row">
     <form class="form-signin">
-        <h2 class="form-signin-heading">Please Sign In</h2>
+    <select id='lang'>
+    <option value=""><?php echo strtoupper($_SESSION['lang']);?></option>
+                        <option value="en">EN</option>
+                        <option value="fr">FR</option>
+                        </select>
+        <h2 class="form-signin-heading"><?= _SIGN ?></h2>
         <div id="result" style="display: none"></div>
-        <label for="username" class="sr-only">Email</label>
+        <label for="username" class="sr-only"><?= _EMAIL ?></label>
         <input type="email" id="username" class="form-control" placeholder="Enter your Email address" required
                autofocus>
-        <label for="password" class="sr-only">Password</label>
+        <label for="password" class="sr-only"><?= _PASSWORD ?></label>
         <input type="password" id="password" class="form-control" placeholder="Password" required>
-        <button class="btn btn-lg btn-primary btn-block" id="login">Sign in</button>
-        <a class="btn btn-sm btn-link" id="forgot" data-toggle="modal" data-target="#forgotModal">Forgotten / Change
-            Password</a>
-        <a href="/register" class="btn btn-sm btn-link pull-right" >Register</a>
+        <button class="btn btn-lg btn-primary btn-block" id="login"><?= _SIGNIN ?></button>
+        <a class="btn btn-sm btn-link" id="forgot" data-toggle="modal" data-target="#forgotModal"><?= _FORGOT ?></a>
+        <a href="/register" class="btn btn-sm btn-link pull-right" ><?= _REGISTER ?></a>
     </form>
 </div>

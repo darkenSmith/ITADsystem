@@ -136,12 +136,12 @@
 
 
 </style>
-
-<h1>New Collection Request</h1>
+<?php echo $_SERVER['HTTP_REFERER']; ?>
+<h1><?= _BOOKTITLE ?></h1>
 
 <div class='form-header container-fluid'>
 
-    <h1>IT Asset Disposal</h1><br>
+    <h1><?= _ITADTXT ?></h1><br>
     <!-----<h3>Book a Collection</h3><br>--->
     <img src='/assets/media/StoneLogo.png' alt='Stone' height='70'/>
 
@@ -161,56 +161,53 @@
         <form id="formstuff" method="POST" action="/booking/update" enctype="multipart/form-data">
             <div class="form-group ">
                 <div class="col-xL-4">
-                    <label for="org"> Organisation<span style="color:red;">*</span></label>
+                    <label for="org"> <?= _ORGTXT ?><span style="color:red;">*</span></label>
 
                     <input type="text" id="org" name="Org" maxlength="200" class="form-control"
-                           placeholder="Organisation Name"/><br>
+                           placeholder="<?= _ORGNAME ?>"/><br>
 
 
-                    <label for="reqcon"> Request Contact </label>
+                    <label for="reqcon"> <?= _CONTACTXT ?> </label>
                     <input type="text" id="reqcon" maxlength="100" class="form-control"
-                           placeholder="Request Contact"><br>
+                           placeholder=" <?= _CONTACTXT ?>"><br>
 
-                    <label> Position </label>
+                    <label> <?= _POSITION ?> </label>
                     <input type="text" id="pos" maxlength="100" name="position" class="form-control"
-                           placeholder="Position"><br><br>
+                           placeholder="<?= _POSITION ?>"><br><br>
 
 
-                    <label for="email"> Email Address<span style="color:red;">*</span></label>
+                    <label for="email"> <?= _EMAILADD ?><span style="color:red;">*</span></label>
                     <input type="email" name="contactemail" maxlength="100" id="email" class="form-control "
-                           placeholder="Email Address"/><br><br>
+                           placeholder="<?= _EMAIL ?>"/><br><br>
 
-                    <label> Telephone<span style="color:red;">*</span></label>
+                    <label> <?=_TELE?><span style="color:red;">*</span></label>
                     <input type="text" id="tel" maxlength="20" class="form-control"/>
                     <br>
 
-                    <label for="country"> Country<span style="color:red;">*</span></label>
+                    <label for="country"> <?= _COUNTY ?><span style="color:red;">*</span></label>
                     <div class="dropdown">
                         <select class="form-control" id="country">
-                            <option value="de" selected>Select Country</option>
-                            <option value="England">England</option>
-                            <option value="Wales">Wales</option>
-                            <option value="Scotland">Scotland</option>
-                            <option value="Other">Other</option>
+                            <option value="de" selected><?= _SELCOUNTY ?></option>
+                            <option value="England"><?= _ENG ?></option>
+                            <option value="Wales"><?= _WLE ?></option>
+                            <option value="Scotland"><?= _SCT?></option>
+                            <option value="Other"><?=_OTH ?></option>
 
 
                         </select>
                     </div>
 
                     <div id='premisestuff'>
-                        <label for="prem" style="color: #FF0000"> **Hazardous Waste Producers
-                            Premises Code </label>
+                        <label for="prem" style="color: #FF0000"> <?= _PREM?> </label>
                         <input type="text" maxlength="20" name="premisescode" id="prem" class="form-control"/><br>
                         <span style="font-size:12.0pt;line-height:115%; font-family: Calibri;">
-                            If you produce more than 500Kg annually of any Waste classified as Hazardous and the site producing the waste is located in Wales; you are legally required to register your site as a producer with National Resources Wales &amp; receive a site Premises Code. Please tick exempt if less than 500Kg.
-                            Sites in England, Scotland &amp; NI are not required to register, please tick exempt.<br>
-                            Click <a href="http://www.environment-agency.gov.uk/business/topics/waste/32198.aspx"
-                                     target="_blank" style="color: #008000">here</a> for guidance.(Typically IT equipment with a screen is classified as Hazardous).
+                          <?= _PREMNOTE ?>
+                            <br>
+                            <?= _CLICK ?> <a href="http://www.environment-agency.gov.uk/business/topics/waste/32198.aspx"
+                                     target="_blank" style="color: #008000"><?=_HERE ?></a> <?=_HERETXT ?>
                         </span>
                         <br>
-
-
-                        <span> <label>Exempt</label></span> <input type="checkbox" name="ex" id="expmt"> <br><br>
+                        <span> <label><?= _EXEMPT ?></label></span> <input type="checkbox" name="ex" id="expmt"> <br><br>
                     </div>
 
 
@@ -222,67 +219,59 @@
                 </div>
                 <div class="row">
                     <div>
-                        <label> Address<span style="color:red;">*</span></label><br>
+                        <label> <?= _ADDRESS ?><span style="color:red;">*</span></label><br>
                         <input type="text" id="add1" maxlength="50" name="Address1" class="form-control"
-                               placeholder="Address Line 1"/><Br>
+                               placeholder="<?=_ADD1 ?>"><Br>
                         <input type="text" id="add2" maxlength="50" class="form-control"
-                               placeholder="Address Line 2"><br>
+                               placeholder="<?=_ADD2 ?>"><br>
                         <input type="text" id="add3" maxlength="50" class="form-control"
-                               placeholder="Address Line 3"><br>
-                        <label> Town<span style="color:red;">*</span></label><br> <input type="text" maxlength="50"
+                               placeholder="<?=_ADD3 ?>"><br>
+                        <label> <?=_TOWN ?><span style="color:red;">*</span></label><br> <input type="text" maxlength="50"
                                                                                          class="form-control" id="twn"
-                                                                                         placeholder="Town / City"/><br>
-                        <label> Postcode<span style="color:red;">*</span></label><br> <input type="text" maxlength="8"
+                                                                                         placeholder="<?=_TOWN ?>"><br>
+                        <label> <?=_POSTCODE?><span style="color:red;">*</span></label><br> <input type="text" maxlength="8"
                                                                                              name="Postcode"
                                                                                              class="form-control"
                                                                                              id="postc"
-                                                                                             placeholder="Postcode"/>
+                                                                                             placeholder="<?=_POSTCODE?>"/>
                         <br>
-                        <label> Site contact on the day of collection </label>
+                        <label><?=_SITECON ?> </label>
                         <input type="text" maxlength="20" id="cont" name="SiteContact" class="form-control"
-                               placeholder="Site Contact"><br>
+                               placeholder="<?=_SITECONPLACE?>"><br>
 
-                        <label> Contact Phone (mobile phone number is preferable)</label>
+                        <label> <?=_SITEPHONE ?></label>
                         <input type="text" maxlength="20" id="contph" name="contactphone" class="form-control"
-                               placeholder="Contact Phone"> <br>
+                               placeholder="<?=_SITEPHONE?>" > <br>
 
 
                         <br>
 
 
-                        <h3>Collection Details</h3>
-                        <p> Please list the equipment for collection in order that Stone can organise appropriate
-                            vehicles and economical route planning/collection dates. A collection date will be agreed
-                            within 48 hours following receipt of request.</p>
+                        <h3><?= _COLDETITLE ?></h3>
+                        <p><?= _COLNOTE1 ?></p>
+                        <br>
+
+                        <strong><?= _COLLCRGE ?></strong>
+                        <p><?= _COLNOTE2 ?> </p>
 
 
                         <br>
-
-
-                        <strong>Collection Charges </strong>
-                        <p>In all cases Stone will endeavour to provide a cost neutral service, to make this
-                            sustainable, clients are requested to have a minimum of 25 qualifying items for collection -
-                            Qualifying items will highlight once selected. If a collection does not qualify then a
-                            charge may be applied. </p>
-
-
-                        <br>
-                        <p><b>Please total units by the product groups in our list below. </b></p>
+                        <p><b><?= _COLUNITNOTE ?></b></p>
 
 
                         <table class="table" id="tb">
                             <thead>
                             <tr class="tr-header">
 
-                                <th> Items</th>
-                                <th> Qty</th>
-                                <th hidden>Asset Management Required</th>
+                                <th> <?= _ITEMS ?></th>
+                                <th> <?=  _QTY ?></th>
+                                <th hidden><?=_AMR ?></th>
 
 
                                 <th hidden class="plus"><a href="javascript:void(0);" style="font-size:18px;"
-                                                           id="addMore" title="Add More lines"><span
+                                                           id="addMore" title="<?= _ADDMORELINE ?>"><span
                                                 class="glyphicon glyphicon-plus"></span></a>
-                                    <span class="tooltiptext">Add a new line</span></th>
+                                    <span class="tooltiptext"><?= _ADDLINENOTE ?></span></th>
 
 
                             </thead>
@@ -294,80 +283,74 @@
                                     <div class="control-group">
                                         <div class="dropdown">
                                             <select name="select-parts" id='part' class="form-control select-parts">
-                                                <option value="de" selected>Select Part Type</option>
-                                                <option value="3">PC - iSeries</option>
-                                                <option value="71">PC - Apple</option>
-                                                <option value="53">PC - AMD</option>
-                                                <option value="55">PC - Uknown</option>
-                                                <option value="31">ALLINONE PC - iSeries</option>
-                                                <option value="75">ALLINONE PC - Apple</option>
-                                                <option value="63">ALLINONE PC - AMD</option>
-                                                <option value="61">ALLINONE PC - Uknown</option>
-                                                <option value="5">LAPTOP - iSeries</option>
-                                                <option value="73">LAPTOP - Apple</option>
-                                                <option value="59">Laptop - AMD</option>
-                                                <option value="57">Laptop - Uknown</option>
-                                                <option value="47">Smart Phone</option>
-                                                <option value="45">Apple Phone</option>
-                                                <option value='33'>Non Smart Mobile</option>
-                                                <option value="51">Tablet</option>
+                                                <option value="de" selected><?= _SELECTPART ?></option>
+                                                <option value="3"><?=_PCI ?></option>
+                                                <option value="71"><?= _PCA ?></option>
+                                                <option value="53"><?=_PCAMD ?></option>
+                                                <option value="55"><?=_PCAMD ?></option>
+                                                <option value="31"><?= _AIOI ?></option>
+                                                <option value="75"><?=_AIOA?></option>
+                                                <option value="63"><?=_AIOAMD?></option>
+                                                <option value="61">ALLINONE <?=_PCUNK?></option>
+                                                <option value="5"><?=_LAPI?></option>
+                                                <option value="73"><?=_LAPA?></option>
+                                                <option value="59"><?=_LAPAMD?></option>
+                                                <option value="57"><?=_LAPUN?></option>
+                                                <option value="47"><?=_SMRTPHNE?></option>
+                                                <option value="45"><?=_APPPHNE?></option>
+                                                <option value='33'><?=_NONPHNE?></option>
+                                                <option value="51"><?=_TAB?></option>
                                                 <option value="11">TFT Monitors</option>
-                                                <option value="49">Apple Tablet</option>
-                                                <option value="15">TV</option>
-                                                <option value="7">SERVER</option>
-                                                <option value="43">Network-Switches</option>
-                                                <option value="17">Hard-Drive</option>
-                                                <option value="29">SMARTBOARD</option>
-                                                <option value="9">PROJECTOR</option>
-                                                <option value="25">DESKTOP-PRINTER</option>
-                                                <option value="27">STANDALONE-PRINTER</option>
-                                                <option value="41">LAPTOP Trolley</option>
+                                                <option value="49"><?=_APPTAB?></option>
+                                                <option value="15"><?=_TV?></option>
+                                                <option value="7"><?=_SERVER?></option>
+                                                <option value="43"><?=_NETWRK?></option>
+                                                <option value="17"><?=_HRDDRIVE?></option>
+                                                <option value="29"><?=_SMRTBOARD?></option>
+                                                <option value="9"><?=_PROJ?></option>
+                                                <option value="25"><?=_DESK?></option>
+                                                <option value="27"><?=_STANDPRI?></option>
+                                                <option value="41"><?=_LAPTRO?></option>
 
 
                                             </select>
                                         </div>
                                     </div>
                                 </td>
-                                <td id="errparts" hidden><p style="color:red;"> please fill in line</p></td>
+                                <td id="errparts" hidden><p style="color:red;"> </p></td>
                                 <td><input type='number' min="0" max="5000" class='working'></td>
                                 <td hidden><input type='number' min="0" max="5000" class='notworking'></td>
                                 <td hidden><input type='checkbox' class='v'></td>
                                 <td hidden><input type='checkbox' class='w' name='wipe'></td>
                                 <td class="delline" hidden><a href='javascript:void(0);' class='remove'><span
                                                 class='glyphicon glyphicon-remove'></span></a>
-                                    <span class="tooltiptext2">remove a line</span></td>
+                                    <span class="tooltiptext2"><?= _REMOVELINE ?></span></td>
 
                             </tr>
                             </tbody>
                         </table>
-                        <p id='applenote'><label>Notes:</label> All Apple items must be iCloud unlocked prior to
-                            collection <a href='STONEiphonedoc.pdf' target="_blank"> click here </a> for a guide on how
-                            to unlock. </p>
-                        <p id='charge' style='color:red;'> This request has less than 25 qualifying items therefore may
-                            be chargeable </p>
+                        <p id='applenote'><label><?= _NOTETAG ?></label><?= _NOTETAGTXT ?>
+                            collection <a href='STONEiphonedoc.pdf' target="_blank"> <?= _CLICKHERE ?> </a> <?= _GUIDE ?> </p>
+                        <p id='charge' style='color:red;'> <?= _ITEMTXT ?> </p>
 
                         <input type='button' value='Add Line' class="btn btn-primary btn-lg" id='addmore2'>
                         <br>
                         <br>
-
-
-                        <strong>You can enter an additional 3 items, please note additional items may not be
-                            accepted.</strong>
-                        <p> If your product is not in the above list, please add in the box below. </p><br>
+                        <strong><?= _ADDTIMES ?></strong>
+                        <p> <?= _PRODUCTTXT ?></p><br>
                         <!-- <p>(e.g. peripherals x 2, Tapes x 10 and total in the Quantity box)</p> -->
                         <p>
                         <p id="limit"><b>3</b></p>
-                        <input type="text" maxlength="100" id="newitem" placeholder="e.g. Xbox360"><label><input
-                                    type="button" class="btn btn-primary btn-lg" id="additem" value="Submit"></label>
+                        <input type="text" maxlength="100" id="newitem" placeholder="<?= _EG2 ?>"><label><input
+                                    type="button" class="btn btn-primary btn-lg" id="additem" value="<?= _SUBMIT ?>"></label>
                         <br>
                         <br>
                         <br>
 
                         <div id="imgupload">
 
-                            <p style="color:green;"><strong> Please provide images of all the items Collectively – This
-                                    will help speed up the booking process.</strong></p>
-                            <p style="color:green;"><strong> Please ensure images are no more than 8MB.</strong></p><br>
+                            <p style="color:green;"><strong> <?= _PLEASEPRO ?></strong></p>
+                            <p style="color:green;"><strong> <?= _8MBTXT ?></strong></p><br>
                             <div>
                                 <input type="file" id="file" name="inputfile[]" accept=".jpeg,.jpg,.png, .gif"
                                        data-type='image'/><span style="color:red;">*</span>
@@ -382,31 +365,58 @@
                             </div>
 
                         </div>
-                        <p id='errpic' style="color:red;"> Please check file size.</p>
+                        <p id='errpic' style="color:red;"><?= _CHECKFILE ?></p>
                         <br>
                         <br>
 
 
                         <br>
-                        <label> BIOS password (Laptop Only – Please note the BIOS password must be removed or provided
-                            as part of the collection. If we cannot pass this to wipe the items a charge per unit will
-                            be applied) </label>
+                        <label> <?= _NATXT ?></label>
                         <input type="text" maxlength="255" class="form-control" id="biopass"
-                               placeholder="BIOS password">
-                        <strong>(N/A) </strong>
+                               placeholder="<?= _BIOPL ?>">
+                        <strong><?= _NAPLACE ?> </strong>
                         <input type="checkbox" id="bioscheck"/><br>
 
                         <br>
                         <hr>
 
                         <div class="col-xl-4">
-                            <p><label>Note: </label> Our collections are made between 8-2 please confirm the earliest
-                                access time and any times to avoid. </p>
+                            <p><label><?= _NOTETAG ?> </label> <?= _OURCOLL ?> </p>
                             <br><br>
-                            <label>Earliest Access Time</label>
+
+                            <div class="avalidays">
+                            <table class="tabledays">
+                            <thead>
+                            <tr>
+                            <th> <?= _AVADAYS ?> </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                            <td>  <input type="checkbox" id="mond" name="days" value="Monday"> <?= _MON ?><td>
+                            <td>  <input type="checkbox" id="tues" name="days" value="Tuesday"> <?= _TUE ?><td>
+                            </tr>
+                            <tr>
+                            <td>  <input type="checkbox" id="wens" name="days" value="Wensday"> <?= _WED ?><td>
+                            <td>  <input type="checkbox" id="thrus" name="days" value="Thursday"> <?= _THURS ?><td>
+                            
+                            </tr>
+                            <tr>
+                            </tr>
+                            <td>  <input type="checkbox" id="frid" name="days" value="Friday"> <?= _FRI ?><td>
+                            </tr>
+                            
+                            </table>
+                            </tbody>
+                            </div>
+
+
+
+                            <br>
+                            <label><?= _EARLY ?></label>
 
                             <select class="eaccess form-control" id="early">
-                                <option selected disabled style="color:grey;">Please Select a option..</option>
+                                <option selected disabled style="color:grey;"><?= _SELECTOPTION ?></option>
                                 <?php
 
                                 for ($hours = 0; $hours < 24; $hours++) // the interval for hours is '1'
@@ -420,47 +430,46 @@
                         </div>
                         <br>
                         <div class="col-xl-4">
-                            <label> Times to Avoid </label>
+                            <label> <?= _TIMEAVIOD ?> </label>
                             <textarea rows="4" cols="50" class="avoidcas form-control" id="avoid"></textarea>
                         </div>
                         <div class="col-xl-4">
-                            <label> Notes/Further collection instructions. </label>
+                            <label> <?=_FURTHERINFO ?></label>
                             <textarea rows="4" cols="50" class="avoidissuecl form-control" id="avoidissue"
-                                      placeholder=" e.g access, palletised/caged etc..."></textarea>
+                                      placeholder=" <?=EGINFO1?>  "></textarea>
                         </div>
                         <br>
                     </div>
                     <br>
                     <br>
                     <hr>
-                    <p class='font-italic'><label>Note: </label> All collections should be made from 1 location on the
-                        ground floor. </p>
+                    <p class='font-italic'><label><?= _NOTETAG ?> </label> <?= _GROUNDWARN ?> </p>
                     <br>
                     <div class="ground col-xl-4">
 
-                        <label> Is your collection on the ground floor? </label>
+                        <label> <?= _ISGROUND ?></label>
                         <select class="form-control" style="padding-right:20px;">
-                            <option selected disabled style="color:grey;">Please Select a option..</option>
+                            <option selected disabled style="color:grey;"><?= _SELECTOPTION ?></option>
                             <option value='Yes'>Yes</option>
                             <option value='No'>No</option>
                         </select>
                     </div>
                     <br>
                     <div class="lift col-xl-4">
-                        <label> is there a lift available?</label>
-                        <select id="liff" class="liftval form-control" style="padding-right:20px;">
-                            <option disabled style="color:grey;">Please Select a option..</option>
-                            <option value='Yes'>Yes</option>
-                            <option value='No'>No</option>
+                        <label> <?= _LIFT?></label>
+                        <select id="liff" class="lif<?=_TV?>al form-control" style="padding-right:20px;">
+                            <option disabled style="color:grey;"><?= _SELECTOPTION ?></option>
+                            <option value='Yes'><?= _YES ?></option>
+                            <option value='No'><?= _NO ?></option> 
                         </select>
                     </div>
                     <br>
                     <div class="steps col-xl-4">
-                        <label>Are there any internal or external steps?</label>
+                        <label><?= _STEPS?></label>
                         <select class="stepsval form-control" style="padding-right:20px;">
-                            <option selected disabled style="color:grey;">Please Select a option..</option>
-                            <option>Yes</option>
-                            <option>No</option>
+                            <option selected disabled style="color:grey;"><?= _SELECTOPTION ?></option>
+                            <option><?= _YES ?></option>
+                            <option><?= _NO ?></option>
                         </select>
                     </div>
 
@@ -470,30 +479,30 @@
                     <div class="park col-xl-4">
                         <label>Please give details of collection parking</label>
                         <select class="parking form-control">
-                            <option selected disabled style="color:grey;">Please Select Description...</option>
-                            <option>Allocated</option>
-                            <option>Plenty of Availability</option>
-                            <option>On Street</option>
-                            <option>Pay and Display</option>
-                            <option>Loading Bay</option>
+                            <option selected disabled style="color:grey;"><?= _SELECTDESC ?></option>
+                            <option><?= _ALLOCATED?></option>
+                            <option><?= _PLENTY?></option>
+                            <option><?= _ONSTREET?></option>
+                            <option><?= _PD?></option>
+                            <option><?= _BAY?></option>
                         </select>
                     </div>
                     <br>
                     <div class="col-xl-4">
-                        <label>Are there any items that are bulky?</label>
+                        <label><?= _BULK ?></label>
                         <select class="twoman form-control" style="padding-right:20px;">
-                            <option selected disabled style="color:grey;">Please Select...</option>
-                            <option>Yes</option>
-                            <option>No</option>
+                            <option selected disabled style="color:grey;"><?= _SELECTOPTION ?></option>
+                            <option><?= _YES ?></option>
+                            <option><?= _NO ?></option>
                         </select>
                     </div>
                     <br>
                     <div class="help col-xl-4">
                         <label>Is there help on site?</label>
                         <select class="onsite form-control" style="padding-right:20px;">
-                            <option selected disabled style="color:grey;">Please select a option...</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
+                            <option selected disabled style="color:grey;"><?= _SELECTOPTION ?></option>
+                            <option value="Yes"><?= _YES ?></option>
+                            <option value="No"><?= _NO ?></option>
                         </select>
 
                     </div>
@@ -504,9 +513,8 @@
                 <div id="confarea">
                     <br>
                     <strong>Data Protection Law</strong>
-                    <br>Please Note: For us to process your Assets, we require you to agree/acknowledge the Data
-                    Protection Law Agreement. You will be directed to this once you submit your Collection Request.
-                    <p> Please click here to confirm the information given is correct to the best of your knowledge:
+                    <br><?=_DATALAW1?>
+                    <p> <?=_DATALAW2 ?>
                         <input type="checkbox" id="confirmed" value="ON"></p>
                 </div>
 
@@ -516,38 +524,35 @@
 
                 <br>
                 <br>
-                <p id='er' style="color:red;"> *Please scroll up and check you have filled in all required fields </p>
+                <p id='er' style="color:red;"> <?=_SCROLLUP?> </p>
 
 
             </div>
 
-            <strong>Please contact our Stone ITAD Administration if you require any further assistance: <br><br>E Mail:
+            <strong><?= _PLEASECON ?> <br><br><?= _EMAILFORM ?>
                 <a href="mailto:Tracey.Melbourne@stonegroup.co.uk" style="color: #008000">Tracey.Melbourne@stonegroup.co.uk </a><br>
-                Direct Telephone Number:01785 786775</strong>
+                Direct Telephone Number:<?= ITADNUM ?></strong>
             <br>
         </form>
     </div>
     <div id="myModal" class="modal">
         <div align="center" class='con'>
             <span class="close">&times;</span>
-            <h1 class="display-3">Standard Agreement</h1><br>
+            <h1 class="display-3"><?=_STANDARD ?></h1><br>
             <div id="pdf">
                 <iframe src="/assets/doc/ITAD_terms.pdf" width=70% height=600>
-                    <a href="/assets/doc/#/OnlineDataProcessingContract.pdf">Download PDF</a></iframe>
+                    <a href="/assets/doc/#/OnlineDataProcessingContract.pdf"><?= _DOWNLOAD ?></a></iframe>
                 <br><br></div>
 
-            <button type="button" id="agree" class="btn btn-success"><b>Agree</b></button>
-            <button type="button" id="disagree" class="btn btn-danger"><b>Disagree</b></button>
+            <button type="button" id="agree" class="btn btn-success"><b><?= _AGREE ?></b></button>
+            <button type="button" id="disagree" class="btn btn-danger"><b><?= _AGREE ?></b></button>
             <br>
             <br>
 
             <hr>
-            <h2> Bespoke Agreements </h2>
-            <p> A bespoke agreement is specifically tailored for an individual customer.<br>If you have one in place,
-                please <a href="mailto:Tracey.Melbourne@stonegroup.co.uk?Subject=GDPR%20Enquires">Email us</a> or Call
-                us on <a href="01785786775">01785 786 775 </a>.<br><br>
-            <p class="lead"><a class="btn btn-primary btn-sm" href="https://www.stonegroup.co.uk/" role="button">Continue
-                    to homepage</a></p>
+            <h2> <?= _BESPOKEAGREE ?> </h2>
+            <p> <?= _BESPOKETXT ?> <a href="mailto:Tracey.Melbourne@stonegroup.co.uk?Subject=GDPR%20Enquires"><?= _EMAILUS ?></a> <?= _CALLUS ?> <a href="01785786775"><?= ITADNUM ?></a>.<br><br>
+            <p class="lead"><a class="btn btn-primary btn-sm" href="https://www.stonegroup.co.uk/" role="button"><?=_HOMEPAGE ?></a></p>
         </div>
     </div>
 
@@ -573,7 +578,7 @@
         var f_wipetick = 0;
         var check = 0;
         var chargable = 0;
-
+        var avalidays = [];
         var other1del = 0;
         var other2del = 0;
         var other3del = 0;
@@ -589,14 +594,16 @@
         var curname = '';
         var othercheck = 0;
         var filecheck = 0;
+        var daystring = "";
+        var daysavaliable ="";
 
         var lift = $('.lift option:selected').text();
         var steps = $('.steps option:selected').text();
         var parking = $('.parking option:selected').text();
         var twoman = $('.twoman option:selected').text();
-
-        $('#er').hide();
         $('#errpic').hide();
+        $('#er').hide();
+        
         var errcount = 0;
 //showsize();
         $('#applenote').hide();
@@ -605,7 +612,7 @@
         $('.lift').hide();
 
 
-        $('#limit').html("<p><b>Entries left:</b> 3</p>");
+        $('#limit').html("<p><b><?=_ENTRYLEFT?>:</b> 3</p>");
 
         $('#myModal').css("display", "none");
 
@@ -622,8 +629,8 @@
 
             }
 
-
-            $.MessageBox("Unfortunately, we are unable to submit this request.\n Please agree to our agreement to submit.")
+           
+            $.MessageBox("<?php echo _AGREEERR ?> ");
             $('#myModal').css("display", "none");
 
         });
@@ -778,7 +785,7 @@
                 console.log(selectedop + ':test');
 
 
-                if (selected == 'PC - Apple' || selected == 'ALLINONE PC - Apple' || selected == 'LAPTOP - Apple' || selected == 'Apple Phone' || selected == 'Apple Tablet') {
+                if (selected == '<?=_PCA?>' || selected == '<?=_AIOA?>' || selected == '<?=_LAPA?>' || selected == '<?=_APPPHNE?>' || selected == '<?=_APPTAB?>') {
 
                     $('#applenote').show();
                 } else {
@@ -787,7 +794,7 @@
 
 
                 if (working !== undefined) {
-                    if (selected == 'PC - iSeries' || selected == 'PC - Apple' || selected == 'PC - AMD' || selected == 'PC - Uknown' || selected == 'ALLINONE PC - iSeries' || selected == 'ALLINONE PC - Apple' || selected == 'ALLINONE PC - Uknown' || selected == 'ALLINONE PC - AMD' || selected == 'LAPTOP - iSeries' || selected == 'LAPTOP - Apple' || selected == 'Laptop - Uknown' || selected == 'Laptop - AMD' || selected == 'TFT Monitors' || selected == 'SERVER' || selected === 'Network-Switches' || selected == 'Apple Phone' || selected == 'Smart Phone' || selected == 'Apple Tablet' || selected == 'Tablet' || selected == 'TV') {
+                    if (selected == '<?=_PCI?>' || selected == '<?=_PCA?>' || selected == '<?=_PCAMD?>' || selected == '<?=_PCUNK?>' || selected == '<?=_AIOI?>' || selected == '<?=_AIOA?>' || selected == 'ALLINONE <?=_PCUNK?>' || selected == '<?=_AIOAMD?>' || selected == '<?=_LAPI?>' || selected == '<?=_LAPA?>' || selected == '<?=_LAPUN?>' || selected == '<?=_LAPAMD?>' || selected == 'TFT Monitors' || selected == '<?=_SERVER?>' || selected === '<?=_NETWRK?>' || selected == '<?=_APPPHNE?>' || selected == '<?=_SMRTPHNE?>' || selected == '<?=_APPTAB?>' || selected == '<?=_TAB?>' || selected == '<?=_TV?>') {
 
                         if (!isNaN(working) && working.length !== 0) {
                             totalqty += parseFloat(working);
@@ -1018,7 +1025,7 @@
 
         $('.select-parts').on('change', function () {
 
-            if (part == 'PC - Apple' || part == 'ALLINONE PC - Apple' || part == 'LAPTOP - Apple' || part == 'Apple Phone' || part == 'Apple Tablet') {
+            if (part == '<?=_PCA?>' || part == '<?=_AIOA?>' || part == '<?=_LAPA?>' || part == '<?=_APPPHNE?>' || part == '<?=_APPTAB?>') {
 
                 $('#applenote').show();
 
@@ -1033,7 +1040,7 @@
             ///   $.MessageBox(part);
 
 
-            if (part == 'PC - iSeries' || part == 'PC - Apple' || part == 'PC - AMD' || part == 'PC - Uknown' || part == 'ALLINONE PC - iSeries' || part == 'ALLINONE PC - Apple' || part == 'ALLINONE PC - AMD' || part == 'ALLINONE PC - Uknown' || part == 'Laptop - iSeries' || part == 'LAPTOP - Apple' || part == 'Laptop - AMD' || part == 'Laptop - Uknown' || part == 'TFT Monitors' || part == 'SERVER' || part === 'Network-Switches' || part == 'Apple Phone' || part == 'Smart Phone' || part == 'Apple Tablet' || part == 'Tablet' || part == 'TV') {
+            if (part == '<?=_PCI?>' || part == '<?=_PCA?>' || part == '<?=_PCAMD?>' || part == '<?=_PCUNK?>' || part == '<?=_AIOI?>' || part == '<?=_AIOA?>' || part == '<?=_AIOAMD?>' || part == 'ALLINONE <?=_PCUNK?>' || part == '<?=_LAPI?>' || part == '<?=_LAPA?>' || part == '<?=_LAPAMD?>' || part == '<?=_LAPUN?>' || part == 'TFT Monitors' || part == '<?=_SERVER?>' || part === '<?=_NETWRK?>' || part == '<?=_APPPHNE?>' || part == '<?=_SMRTPHNE?>' || part == '<?=_APPTAB?>' || part == '<?=_TAB?>' || part == '<?=_TV?>') {
 
                 $(this).css('background-color', '#bcdf20');
 
@@ -1041,7 +1048,7 @@
                 $(this).css('background-color', '');
             }
 
-            if (part == 'TFT Monitors' || part == 'Network-Switches' || part == 'Hard-Drive' || part == 'SERVER') {
+            if (part == 'TFT Monitors' || part == '<?=_NETWRK?>' || part == '<?=_HRDDRIVE?>' || part == '<?=_SERVER?>') {
 
                 $('#tb tr').find("td:eq(4)").find('.w').hide();
                 $('#tb tr').find("td:eq(4)").find('.w').prop("checked", false);
@@ -1049,13 +1056,13 @@
                 $('#tb tr').find("td:eq(4)").find('.w').show();
             }
 
-            if (part == 'CRT Monitors' || part == 'PROJECTOR' || part == 'DESKTOP-PRINTER' || part == 'STANDALONE-PRINTER' || part == 'SMARTBOARD' || part == 'LAPTOP Trolley' || partother == 19 || partother == 21 || partother == 23) {
+            if (part == 'CRT Monitors' || part == '<?=_PROJ?>' || part == '<?=_DESK?>' || part == '<?=_STANDPRI?>' || part == '<?=_SMRTBOARD?>' || part == '<?=_LAPTRO?>' || partother == 19 || partother == 21 || partother == 23) {
 
                 $('#tb tr').find("td:eq(4)").find('.w').hide();
                 $('#tb tr').find("td:eq(4)").find('.w').prop("checked", false);
                 $('#tb tr').find("td:eq(3)").find('.v').hide();
                 $('#tb tr').find("td:eq(3)").find('.v').prop("checked", false);
-            } else if (part == 'TFT Monitors' || part == 'Network-Switches' || part == 'Hard-Drive' || part == 'SERVER' || part == 'Apple Phone' || part == 'Smart Phone' || part == 'Apple Tablet' || part == 'Tablet' || part == 'TV') {
+            } else if (part == 'TFT Monitors' || part == '<?=_NETWRK?>' || part == '<?=_HRDDRIVE?>' || part == '<?=_SERVER?>' || part == '<?=_APPPHNE?>' || part == '<?=_SMRTPHNE?>' || part == '<?=_APPTAB?>' || part == '<?=_TAB?>' || part == '<?=_TV?>') {
 
                 $('#tb tr').find("td:eq(4)").find('.w').hide();
                 $('#tb tr').find("td:eq(4)").find('.w').prop("checked", false);
@@ -1153,7 +1160,7 @@
 
             if (!value || value === ' ') {
 
-                $.MessageBox('Please enter asset before adding more.');
+                $.MessageBox('<?php echo _ENTERASSET ?>');
 
             } else {
 
@@ -1182,7 +1189,7 @@
                         othercheck++;
 
 
-                        $cont_stat = $('#limit').html("<p><strong>Entries left:</strong> " + count + "</p>");
+                        $cont_stat = $('#limit').html("<p><strong><?=_ENTRYLEFT?>:</strong> " + count + "</p>");
 
 
 //$cont_stat.css("font-weight","Bold");
@@ -1256,7 +1263,7 @@
                 $('#addMore2').prop('disabled', true);
 
 
-                $.MessageBox('Sorry you can not add any more lines.');
+                $.MessageBox('<?php echo _NOMORE ?>');
 
 
             } else {
@@ -1319,32 +1326,32 @@
                         + "<div class='dropdown'>"
                         + "<select name='select-parts' id='part' class='form-control select-parts'>"
                         + "<option value='de' selected>Select Part Type</option>"
-                        + "<option value='3'>PC - iSeries</option> "
-                        + "<option value='71'>PC - Apple</option>"
-                        + "<option value='53'>PC - AMD</option> "
-                        + "<option value='55'>PC - Uknown</option>"
-                        + " <option value='75'>ALLINONE PC - iSeries</option>"
-                        + " <option value='31'>ALLINONE PC - Apple</option>"
-                        + " <option value='63'>ALLINONE PC - AMD</option> "
-                        + " <option value='61'>ALLINONE PC - Uknown</option> "
-                        + "<option value='5'>LAPTOP - iSeries</option> "
-                        + "<option value='73'>LAPTOP - Apple</option> "
-                        + " <option value='59'>Laptop - AMD</option> "
-                        + " <option value='57'>Laptop - Uknown</option> "
-                        + "<option value='47'>Smart Phone</option>  <option value='45'>Apple Phone</option>"
-                        + "<option value='33'>Non Smart Mobile</option>"
-                        + "   <option value='49'>Apple Tablet</option>"
-                        + " <option value='51'>Tablet</option>"
+                        + "<option value='3'><?=_PCI?></option> "
+                        + "<option value='71'><?=_PCA?></option>"
+                        + "<option value='53'><?=_PCAMD?></option> "
+                        + "<option value='55'><?=_PCUNK?></option>"
+                        + " <option value='75'><?=_AIOI?></option>"
+                        + " <option value='31'><?=_AIOA?></option>"
+                        + " <option value='63'><?=_AIOAMD?></option> "
+                        + " <option value='61'> <?=_PCUNK?></option> "
+                        + "<option value='5'><?=_LAPI?></option> "
+                        + "<option value='73'><?=_LAPA?></option> "
+                        + " <option value='59'><?=_LAPAMD?></option> "
+                        + " <option value='57'><?=_LAPUN?></option> "
+                        + "<option value='47'><?=_SMRTPHNE?></option>  <option value='45'><?=_APPPHNE?></option>"
+                        + "<option value='33'><?=_NONPHNE?></option>"
+                        + "   <option value='49'><?=_APPTAB?></option>"
+                        + " <option value='51'><?=_TAB?></option>"
                         + "  <option value='11'>TFT Monitors</option>"
-                        + " <option value='15'>TV</option>"
-                        + "<option value='7'>SERVER</option>"
-                        + "<option value='43'>Network-Switches</option>"
-                        + "<option value='17'>Hard-Drive</option>"
-                        + " <option value='29'>SMARTBOARD</option>"
-                        + "   <option value='9'>PROJECTOR</option>"
-                        + "<option value='25'>DESKTOP-PRINTER</option>"
-                        + "<option value='27'>STANDALONE-PRINTER</option>"
-                        + "   <option value='41'>LAPTOP Trolley</option>"
+                        + " <option value='15'><?=_TV?></option>"
+                        + "<option value='7'><?=_SERVER?></option>"
+                        + "<option value='43'><?=_NETWRK?></option>"
+                        + "<option value='17'><?=_HRDDRIVE?></option>"
+                        + " <option value='29'><?=_SMRTBOARD?></option>"
+                        + "   <option value='9'><?=_PROJ?></option>"
+                        + "<option value='25'><?=_DESK?></option>"
+                        + "<option value='27'><?=_STANDPRI?></option>"
+                        + "   <option value='41'><?=_LAPTRO?></option>"
 
                         + newline
                         + "</select>"
@@ -1355,7 +1362,7 @@
                         + "<td><input type='number' class='working' min='0' max='5000'  value='0'></td><td hidden><input type='number' class='notworking' min='0' max='5000'  value='0'></td>"
                         + "<td hidden><input type='checkbox' class='v' class='group1'></td><td hidden><input type='checkbox' class='w' name='wipe' class='group1'></td>"
                         + "<td class='delline'><a href='javascript:void(0);'  class='remove'><span class='glyphicon glyphicon-remove'></span></a>"
-                        + "<span class='tooltiptext2'>remove a line</span></td>"
+                        + "<span class='tooltiptext2'><?= _REMOVELINE ?></span></td>"
                         + "</tr>")
 
 
@@ -1407,7 +1414,7 @@
                         }
 
 
-                        if (partex == 'PC - iSeries' || partex == 'PC - Apple' || partex == 'PC - Uknown' || partex == 'PC - AMD' || partex == 'ALLINONE PC - iSeries' || partex == 'ALLINONE PC - Apple' || partex == 'ALLINONE PC - Uknown' || partex == 'ALLINONE PC - AMD' || partex == 'LAPTOP - iSeries' || partex == 'LAPTOP - Apple' || partex == 'Laptop - Uknown' || partex == 'Laptop - AMD' || partex == 'TFT Monitors' || partex == 'SERVER' || partex == 'Network-Switches' || partex == 'Apple Phone' || partex == 'Smart Phone' || partex == 'Apple Tablet' || partex == 'Tablet' || partex == 'TV') {
+                        if (partex == '<?=_PCI?>' || partex == '<?=_PCA?>' || partex == '<?=_PCUNK?>' || partex == '<?=_PCAMD?>' || partex == '<?=_AIOI?>' || partex == '<?=_AIOA?>' || partex == 'ALLINONE <?=_PCUNK?>' || partex == '<?=_AIOAMD?>' || partex == '<?=_LAPI?>' || partex == '<?=_LAPA?>' || partex == '<?=_LAPUN?>' || partex == '<?=_LAPAMD?>' || partex == 'TFT Monitors' || partex == '<?=_SERVER?>' || partex == '<?=_NETWRK?>' || partex == '<?=_APPPHNE?>' || partex == '<?=_SMRTPHNE?>' || partex == '<?=_APPTAB?>' || partex == '<?=_TAB?>' || partex == '<?=_TV?>') {
 
 
                             $(this).css('background-color', '#bcdf20');
@@ -1418,14 +1425,14 @@
                         }
 
 
-                        if (partex == 'CRT Monitors' || partex == 'PROJECTOR' || partex == 'DESKTOP-PRINTER' || partex == 'STANDALONE-PRINTER' || partex == 'LAPTOP Trolley' ||
-                            partex == 'SMARTBOARD' || partotherex == 19 || partotherex == 21 || partotherex == 23) {
+                        if (partex == 'CRT Monitors' || partex == '<?=_PROJ?>' || partex == '<?=_DESK?>' || partex == '<?=_STANDPRI?>' || partex == '<?=_LAPTRO?>' ||
+                            partex == '<?=_SMRTBOARD?>' || partotherex == 19 || partotherex == 21 || partotherex == 23) {
 
                             $("#row" + id + " .w").hide();
                             $("#row" + id + " .v").hide();
                             $("#row" + id + " .w").prop("checked", false);
                             $("#row" + id + " .v").prop("checked", false);
-                        } else if (partex == 'TFT Monitors' || partex == 'Network-Switches' || partex == 'Hard-Drive' || partex == 'SERVER' || partex == 'Apple Phone' || partex == 'Smart Phone' || partex == 'Apple Tablet' || partex == 'Tablet' || partex == 'TV') {
+                        } else if (partex == 'TFT Monitors' || partex == '<?=_NETWRK?>' || partex == '<?=_HRDDRIVE?>' || partex == '<?=_SERVER?>' || partex == '<?=_APPPHNE?>' || partex == '<?=_SMRTPHNE?>' || partex == '<?=_APPTAB?>' || partex == '<?=_TAB?>' || partex == '<?=_TV?>') {
 
                             $("#row" + id + " .w").hide();
                             $("#row" + id + " .w").prop("checked", false);
@@ -1466,9 +1473,15 @@
         $('#formstuff').submit(function (e) {
 
             e.preventDefault();
-
-
+            daystring = "";
+            $("input:checkbox[name='days']:checked").each(function(){ 
+             avalidays = [];
+            avalidays.push($(this).val()); 
+            daystring += avalidays.join(", ")+',';		
+  		});
             //uploadimage();
+            console.log(daystring.slice(0, -1));
+            
 
 
             var other1name
@@ -1577,7 +1590,7 @@
 
             if (twoman == "Please Select...") {
 
-                $('.twoman').after('<br><span class="error" style="color:red">Please select a option</span>');
+                $('.twoman').after('<br><span class="error" style="color:red"><?= _SELECTOPTION ?></span>');
                 $('#er').show();
                 if (errcount !== 19) {
                     $('html, body').animate({
@@ -1594,9 +1607,9 @@
 
             if (ground == "Please Select a option..") {
 
-                $('.ground').after('<br><span class="error" style="color:red">Please select a option</span>');
+                $('.ground').after('<br><span class="error" style="color:red"><?= _SELECTOPTION ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('.ground').offset().top)
                     }, 500);
@@ -1612,7 +1625,7 @@
             if ($('#file')[0].files.length === 0) {
                 $('#errpic').text('At least one image most be uploaded before submitting.');
                 $('#errpic').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('#file').offset().top)
                     }, 500);
@@ -1626,9 +1639,9 @@
 
             if (lift == "Please Select a option..") {
 
-                $('.lift').after('<br><span class="error" style="color:red">Please select a option</span>');
+                $('.lift').after('<br><span class="error" style="color:red"><?= _SELECTOPTION ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('.lift').offset().top)
                     }, 500);
@@ -1642,9 +1655,9 @@
             }
             if (steps == "Please Select a option..") {
 
-                $('.steps').after('<br><span class="error" style="color:red">Please select a option</span>');
+                $('.steps').after('<br><span class="error" style="color:red"><?= _SELECTOPTION ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('.steps').offset().top)
                     }, 500);
@@ -1659,9 +1672,9 @@
 
             if (onsite == "Please select a option...") {
 
-                $('.onsite').after('<br><span class="error" style="color:red">Please select a option</span>');
+                $('.onsite').after('<br><span class="error" style="color:red"><?= _SELECTOPTION ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('.onsite').offset().top)
                     }, 500);
@@ -1676,9 +1689,9 @@
 
             if (parking == "Please Select Description...") {
 
-                $('.parking').after('<br><span class="error" style="color:red">Please select a option</span>');
+                $('.parking').after('<br><span class="error" style="color:red"><?= _SELECTOPTION ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('.parking').offset().top)
                     }, 500);
@@ -1689,9 +1702,9 @@
             }
             if (!avoid) {
 
-                $('.avoidcas').after('<br><span class="error" style="color:red">Please select a option</span>');
+                $('.avoidcas').after('<br><span class="error" style="color:red"><?= _SELECTOPTION ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('.avoidcas').offset().top)
                     }, 500);
@@ -1702,9 +1715,9 @@
             }
             if (access == 'Please Select a option..') {
 
-                $('.eaccess').after('<br><span class="error" style="color:red">Please select a option</span>');
+                $('.eaccess').after('<br><span class="error" style="color:red"><?= _SELECTOPTION ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('.eaccess').offset().top)
                     }, 500);
@@ -1717,9 +1730,9 @@
             if ($("#confirmed").prop("checked") === false) {
 
 
-                $('#confirmed').after('<br><span class="error" style="color:red">Please Tick box before submitting</span>');
+                $('#confirmed').after('<br><span class="error" style="color:red"><?= _SELECTOPTION ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('#confirmed').offset().top)
                     }, 500);
@@ -1734,10 +1747,10 @@
             if (org.length < 3 || org.length > 50) {
                 // ItemArray = [];
 
-                $('#org').after('<br><span class="error" style="color:red">This field is required: between 3 - 50 Characters</span>');
+                $('#org').after('<br><span class="error" style="color:red"><?= _TWNRANGELNG ?></span>');
                 $('#er').show();
                 vali = 0;
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('#org').offset().top)
                     }, 500);
@@ -1750,10 +1763,10 @@
 
             if (biopass.length < 1) {
                 // ItemArray = [];
-                $('#bioscheck').after('<br><span class="error" style="color:red">This field is required</span>');
+                $('#bioscheck').after('<br><span class="error" style="color:red"><?= _REQ ?></span>');
                 $('#er').show();
                 vali = 0;
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('#bioscheck').offset().top)
                     }, 500);
@@ -1765,10 +1778,10 @@
             }
             if (twn.length < 1) {
                 // ItemArray = [];
-                $('#twn').after('<br><span class="error" style="color:red">This field is required</span>');
+                $('#twn').after('<br><span class="error" style="color:red"><?= _REQ ?></span>');
                 $('#er').show();
                 vali = 0;
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('#twn').offset().top)
                     }, 500);
@@ -1780,9 +1793,9 @@
             }
             if (tel.length < 10) {
                 // ItemArray = [];
-                $('#tel').after('<br><span class="error" style="color:red">This field is required: more than 10 digits</span>');
+                $('#tel').after('<br><span class="error" style="color:red"><?= _TELRANGELNG ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('#tel').offset().top)
                     }, 500);
@@ -1795,9 +1808,9 @@
             }
             if (!valtel) {
                 //  ItemArray = [];
-                $('#tel').after('<br><span class="error" style="color:red">This field is required: Please use a valid number</span>');
+                $('#tel').after('<br><span class="error" style="color:red"><?= _TELVALID ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('#tel').offset().top)
                     }, 500);
@@ -1810,9 +1823,9 @@
             }
             if (!valphone) {
                 // ItemArray = [];
-                $('#contph').after('<br><span class="error" style="color:red">This field is required: Please use a valid number</span>');
+                $('#contph').after('<br><span class="error" style="color:red"><?= _TELVALID ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('#contph').offset().top)
                     }, 500);
@@ -1826,9 +1839,9 @@
             }
             if (add1.length < 5) {
                 // ItemArray = [];
-                $('#add1').after('<br><span class="error" style="color:red">This field is required</span>');
+                $('#add1').after('<br><span class="error" style="color:red"><?= _REQ ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('#add1').offset().top)
                     }, 500);
@@ -1841,11 +1854,25 @@
             }
             if (postcode.length < 6 || postcode.length > 10) {
                 // ItemArray = [];
-                $('#postc').after('<br><span class="error" style="color:red">This field is required: between 6 - 10 Characters </span>');
+                $('#postc').after('<br><span class="error" style="color:red"><?= _POSTCODELIM ?></span>');
                 $('#er').show();
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
                         scrollTop: ($('#postc').offset().top)
+                    }, 500);
+                }
+                vali = 0;
+                errcount++;
+
+                json = '';
+
+            }if (daystring.length == 0) {
+                // ItemArray = [];
+                $('.tabledays').after('<br><span class="error" style="color:red"><?= _SELECTDAY ?> </span>');
+                $('#er').show();
+                if (errcount !== 21) {
+                    $('html, body').animate({
+                        scrollTop: ($('.tabledays').offset().top)
                     }, 500);
                 }
                 vali = 0;
@@ -1859,9 +1886,9 @@
                 if (!validEmail) {
                     errcount++;
                     //ItemArray = [];
-                    $('#email').after('<br><span class="error" style="color:red">Enter a valid email</span>');
+                    $('#email').after('<br><span class="error" style="color:red"><?= _ENTEREMAIL ?></span>');
                     $('#er').show();
-                    if (errcount !== 20) {
+                    if (errcount !== 21) {
                         $('html, body').animate({
                             scrollTop: ($('#email').offset().top)
                         }, 500);
@@ -1887,7 +1914,7 @@
                 //  $('#addmore2').after('<br><br><span class="error" style="color:red">there cannot be empty values</span>');
                 $('#er').show();
                 errcount++;
-                if (errcount !== 20) {
+                if (errcount !== 21) {
                     $('html, body').animate({
 
                         scrollTop: ($('#addmore2').offset().top)
@@ -1934,10 +1961,10 @@
 
 
                         //ItemArray = [];
-                        $('#addmore2').after('<br><br><span class="error" style="color:red">there cannot be empty values</span>');
+                        $('#addmore2').after('<br><br><span class="error" style="color:red"><?= _EMPTYVAL ?></span>');
                         $('#er').show();
                         errcount++;
-                        if (errcount !== 20) {
+                        if (errcount !== 21) {
                             $('html, body').animate({
                                 scrollTop: ($('#addmore2 .error').offset().top)
                             }, 500);
@@ -2085,6 +2112,12 @@
 
                 console.log(json);
 
+  		
+
+
+
+            
+
 
 //console.log(uploadcomp);
 
@@ -2128,6 +2161,7 @@
                             other3name: other3name,
                             country: country,
                             chargable: chargable,
+                            daystring : daystring,
                             //sic : sic,
                             is_exempt: is_exempt
 
@@ -2135,7 +2169,7 @@
                         dataType: "json",
                         success: function (data) {
                             // $.MessageBox(data);
-                            $.MessageBox("Thank for you submission we have sent you an email");
+                            $.MessageBox("<?= _THANKYOUTXT ?>");
 
                         }
                     });
@@ -2184,7 +2218,7 @@
                 console.log("other del:" + other1delre);
 
                 count++;
-                $cont_stat = $('#limit').html("<p><strong>Entries left:</strong> " + count + "</p>");
+                $cont_stat = $('#limit').html("<p><strong><?=_ENTRYLEFT?>:</strong> " + count + "</p>");
 
             }
 
@@ -2196,7 +2230,7 @@
                 val--;
                 console.log("other del:" + other2delre);
                 count++;
-                $cont_stat = $('#limit').html("<p><strong>Entries left:</strong> " + count + "</p>");
+                $cont_stat = $('#limit').html("<p><strong><?=_ENTRYLEFT?>:</strong> " + count + "</p>");
 
             }
             if (other3delre == 23) {
@@ -2207,7 +2241,7 @@
                 val--;
                 console.log("other del:" + other3delre);
                 count++;
-                $cont_stat = $('#limit').html("<p><strong>Entries left:</strong> " + count + "</p>");
+                $cont_stat = $('#limit').html("<p><strong><?= _ENTRYLEFT?>:</strong> " + count + "</p>");
 
             }
 
@@ -2299,9 +2333,9 @@
                                 (filesize / 1024 / 1024).toFixed(2);
                             //console.log(fd.get("inputfile"));
                         } else if (size > 36 || size < 0) {
-                            $.MessageBox("file size:" + size);
+                            $.MessageBox("<?= _FILESIZE ?>" + size);
                         } else {
-                            $.MessageBox("sorry one or more of your files are not supported");
+                            $.MessageBox("<?= _NOTSUP ?>");
                         }
 
 
@@ -2325,7 +2359,7 @@
                     contentType: false,
                     cache: false,             // To unable request pages to be cached
                     processData: false,        // To send DOMDocument or non processed data file it is set to false
-                    success: function (response) {
+                    success: function (response){
                         if (response != 0) {
                             //  $.MessageBox('uploaded');
                         } else {

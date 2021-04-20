@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\Helpers\Config;
 
 /**
  * Class LoginController
@@ -82,6 +83,9 @@ class LoginController extends AbstractController
 
     public function index()
     {
+
+        $conf = new Config();
+        $conf->getlang();
         if (isset($_SESSION['user']['id'])) {
             header('Location: /');
         } else {
@@ -105,7 +109,7 @@ class LoginController extends AbstractController
     {
         unset($_SESSION);
         session_destroy();
-        header('Location: /');
+        header('Location: /'); 
     }
 
     // Calls: models/user.php -> resetPassword()

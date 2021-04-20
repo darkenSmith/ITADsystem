@@ -16,6 +16,7 @@ class Booking extends AbstractModel
     public const UPLOAD_FOLDER = 'images/';
     private $emailConfig;
     private $emailReceiver = 'stoneITAD@stonegroup.co.uk';
+   
 
     /**
      * Collection constructor.
@@ -69,7 +70,7 @@ class Booking extends AbstractModel
         $parking = $_POST['parking'];
         $twoman = $_POST['twoman'];
         $onsite = $_POST['onsite'];
-
+        $avaliabledays = $_POST['daystring'];
         $is_other = 0;
 
         if ($ground == 'yes') {
@@ -141,10 +142,10 @@ class Booking extends AbstractModel
         );
 
         $sqlup = "insert into request(customer_name, customer_email, customer_phone,
-premise_code, premise_exempt, add1, add2, add3, town, postcode, contact_name, contact_tel, request_col_date, req_col_instrct, request_date_added, customer_contact, customer_contact_positon, bio_pass, SICcode, country, request_id, deleted, confirmed, done,  laststatus, GDPRconf, charge, area1, [Early Acess notes], Help_Onsite, [Parking Notes], lift, ground, steps, twoman, avoidtimes, user_id, cmp_number)
+premise_code, premise_exempt, add1, add2, add3, town, postcode, contact_name, contact_tel, request_col_date, req_col_instrct, request_date_added, customer_contact, customer_contact_positon, bio_pass, SICcode, country, request_id, deleted, confirmed, done,  laststatus, GDPRconf, charge, area1, [Early Acess notes], Help_Onsite, [Parking Notes], lift, ground, steps, twoman, avoidtimes, user_id, cmp_number, availability)
 
 values('" . $cleanname . "', '" . $cleanemail . "', '" . $cust_tel . "', '" . $premisecode . "', '" . $is_exempt . "', '" . $cleanadd1 . "', '" . $cleanadd2 . "', '" . $cleanadd3 . "', '" . $cleantown . "', '" . $cleanpostcode . "', '" . $cleancontact . "',
-'" . $contact_tel . "', '" . $cleancoldatenote . "', '" . $cleancolinstruct . "', '" . $timestamp . "', '" . $cleanrequest . "', '" . $position . "','" . $biocl . "','" . $sic . "', '" . $country . "', " . $_SESSION['rid'] . ", '0', '0', '0', 'Request', '1', " . $charge . ", 'Empty', '" . $accessclean . "', '" . $onsiteclean . "', '" . $parkingclean . "', '" . $liftclean . "', '" . $groundclean . "', '" . $stepsclean . "', '" . $twomanclean . "', '" . $avoidclean . "', '".$_SESSION['user']['id']."', '".$cmp."');
+'" . $contact_tel . "', '" . $cleancoldatenote . "', '" . $cleancolinstruct . "', '" . $timestamp . "', '" . $cleanrequest . "', '" . $position . "','" . $biocl . "','" . $sic . "', '" . $country . "', " . $_SESSION['rid'] . ", '0', '0', '0', 'Request', '1', " . $charge . ", 'Empty', '" . $accessclean . "', '" . $onsiteclean . "', '" . $parkingclean . "', '" . $liftclean . "', '" . $groundclean . "', '" . $stepsclean . "', '" . $twomanclean . "', '" . $avoidclean . "', '".$_SESSION['user']['id']."', '".$cmp."', '".$avaliabledays."');
 exec updatearea @rid = '" . $_SESSION['rid'] . "';";
 
         Logger::getInstance("BookingDebugging.log")->debug(
@@ -374,7 +375,12 @@ where Request_id =  " . $_SESSION['rid'];
 
         try {
             $email->setFrom($sendgridConfig['from']['ITADSystem'], "ITAD System");
-            $email->setSubject('New Stone ITAD Request');
+            
+            if($_SERVER['SERVER_NAME'] == 'localhost'){
+                $email->setSubject('New Stone ITAD Request');
+            }else{
+                $email->setSubject('New Stone ITAD Request - Valpak');
+            }
             $email->addTo($this->emailReceiver);
 
             $sqlpics = "select filename from customerPics where Request_ID = " . $_SESSION['rid'];
