@@ -14,6 +14,7 @@ if ($app->isLoggedIn()) {
     echo "
       <div id='navbar' class='collapse navbar-collapse'>
         <ul class='nav navbar-nav'>
+        <li><a href='/test.php'> Report Issue</a><li>
           <li><a href='/'>Home</a></li>
           <li><a href='/user/profile/'>Update Profile</a></li>
          ";
